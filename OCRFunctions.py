@@ -28,7 +28,7 @@ import cv2
 
 
 
-minConf = 40
+
 
 def extraiTexto(file_path):
     '''
@@ -39,15 +39,41 @@ def extraiTexto(file_path):
     É uma variável que contém o caminho URL da imagem selecionada através da futura interface
     
     dados: dados importantes sobre o texto que está sendo extraído, bem como a confiança de cada palavra
+    
+    minConf: valor mínimo para uma palavra ser considerada para estar presente no texto final
 
     
     '''
+    try:
+        img = cv2.imread(file_path)
+        if img is not None:
+            
+            textoFinal = ''
+            
+            rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            minConf = 40
+            dados  = pytesseract.image_to_data(rgb,  lang='por', output_type=Output.DICT)
+            # Aplica o OCR na imagem afim de buscar tanto os textos quanto dados sobre o texto
+            
+            
+            for i in range(0, len(dados['text'])):
+                confianca = int(dados['conf'][i])
+                # Filtra apenas palavras que tenha confiança maior que o valor estipulado
+                if confianca > minConf:
+                    texto = dados['text'][i]
+                    textoFinal += texto + ' '
+        
+            return textoFinal
     
-    img = cv2.imread(file_path)
     
-    rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     
-    dados  = pytesseract.image_to_data(rgb,  lang='por', output_type=Output.DICT)
+    except FileNotFoundError as e:
+        print(f"Erro: {e}")
+    except Exception as e:
+        print(f"Erro durante a extração do texto: {e}")
+        
     
-    cv2.imshow(rgb)
+    
+path = '/home/souzaigor499/Desafio/Projeto_Ciclo01_AlphaEdtech/ImagensTeste/ola.jpg'
 
+print(extraiTexto(path))
