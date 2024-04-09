@@ -86,7 +86,8 @@ class TextExtractor:
 if __name__ == "__main__":
     text_extractor = TextExtractor()
     # image_path = "imagens-teste/print_livro2.png"
-    image_path = "imagens-teste/imagem-baixada.jpg"
+    # image_path = "imagens-teste/imagem-baixada.jpg"
+    image_path = "imagens-teste/cedula-banco-daycoval-menor.png"
 
     # Process the image
     processed_image = text_extractor.process_image(image_path)
