@@ -1,5 +1,5 @@
 '''
-Para o funcionamento dessa função é necessária a instalação da biblioteca pytesseract, PIL e cv2, bem como a execução dos seguintes códigos:
+Para o funcionamento dessa função é necessária a instalação da biblioteca pytesseract e cv2, bem como a execução dos seguintes códigos:
 mkdir tessdata
 wget -O ./tessdata/por.traineddata https://github.com/tesseract-ocr/tessdata/blob/main/por.traineddata?raw=true
 
@@ -21,7 +21,6 @@ Definir uma confiança mínima de forma automática
 
 import pytesseract
 from pytesseract import Output
-from PIL import Image
 import cv2
 
 
