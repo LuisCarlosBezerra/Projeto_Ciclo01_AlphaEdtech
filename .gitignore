@@ -1,3 +1,5 @@
 PC01_OCR/
+__pycache__/
 user_DB.py
 .gitignore
+
