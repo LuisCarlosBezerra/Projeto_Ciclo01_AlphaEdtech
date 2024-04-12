@@ -32,22 +32,25 @@ class DatabaseQueries:
         """
         try:
             with self.connection.cursor() as cursor:
-                with open(image_path, "rb") as image_file:
-                    img = image_file.read()
-
-                    cursor.execute(
-                        f"""
-                        INSERT INTO imagens (nome_imagem, imagem) 
-                            VALUES ('{image_name}', {p.Binary(img)});
-                        """
-                    )
+                # with open(image_path, "rb") as image_file:
+                #     img = image_file.read()
+                img_file = open(image_path, "rb")
+                img = img_file.read()
+                cursor.execute(
+                    f"""
+                    INSERT INTO imagens (nome_imagem, imagem) 
+                        VALUES ('{image_name}', {p.Binary(img)});
+                    """
+                )
 
                 print("INFO: Inserção realizada com sucesso.")
                 self.connection.commit()
+                img_file.close()
                 return True
         except Exception as e:
             print("INFO: Erro ao inserir imagem no banco de dados.")
             print(f"ERROR: {e}")
+            img.close()
             self.connection.rollback()
             return False
 
@@ -95,7 +98,7 @@ if __name__ == "__main__":
 
         db_queries = DatabaseQueries(connection)
         result = db_queries.insert_image(
-            image_path="C:/Users/ruben/Documents/ALPHAEDTECH/HARD/CICLO-1/Projeto_Ciclo01_AlphaEdtech/imagens-teste/cedula-banco-daycoval-menor.png",
+            image_path="C:/Users/ruben/Documents/ALPHAEDTECH/HARD/CICLO-1/Projeto_Ciclo01_AlphaEdtech/images/print_livro2.png",
             image_name="imagem.jpg",
         )
 
