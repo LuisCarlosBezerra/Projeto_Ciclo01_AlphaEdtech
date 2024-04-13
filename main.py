@@ -1,77 +1,53 @@
 from db.connection import DatabaseConnection
-from db.repository import DatabaseQueries
+from db.repository import Repository
 from models.image import ImageClass
 from models.client import Client
 from models.user import User
 from models.digital_document import DigitalDocument
-from datetime import date
+from models.application import Application
+from datetime import date, datetime
+from user_DB import DB_NAME, USER, PASSWORD
 
 
 if __name__ == "__main__":
     try:
-        db_connection = DatabaseConnection(
-            user="postgres",
-            password="12345",
-            host="localhost",
-            dbname="sistema_banco_ocr",
+        repository = Repository(
+            user=USER,
+            password=PASSWORD,
+            dbname=DB_NAME,
+        )
+        db = repository.db
+
+        # TESTE CLASSE APLICAÇÃO=======================================================
+        cliente = Client(
+            "Liane",
+            "12345556",
+            "9992-33",
+            "4334120001-9",
+            "145, Rua cinco, Centro, Pereiras - CE",
+            date(2023, 4, 10),
+        )
+        usuario = User(
+            "Usuario2",
+            "12345556",
+            "user2",
+            "54321",
         )
 
-        db_queries = DatabaseQueries(db_connection.conn)
-
-        # TESTE CLASSE IMAGEM==================================
-        # path = "C:/Users/ruben/Documents/ALPHAEDTECH/HARD/CICLO-1/Projeto_Ciclo01_AlphaEdtech/images/print_livro.png"
-        # image = ImageClass("imagemTeste", image_path=path)
-
-        # image.save_to_database(db_connection)
-        # image.show_image()
-        # image_r = ImageClass.from_database(db_connection, image.id)
-        # image_r.show_image()
-
-        # TESTE CLASSE CLIENTE ========================
-        # cliente = Client(
-        #     "Ruben",
-        #     "12345556",
-        #     "9992-33",
-        #     "4334120001-9",
-        #     "145, Rua cinco, Mondubim, Fortaleza - CE",
-        #     date(2023, 4, 10),
-        # )
-        # cliente.save_to_database(db_connection)
-        # cliente2 = Client.from_database(db_connection, cliente.id)
-        # print(cliente2)
-
-        # TESTE CLASSE USUARIO ==========================================
-        # usuario = User(
-        #     "Daniel",
-        #     "12345556",
-        #     "danielf",
-        #     "54321",
-        # )
-        # usuario.save_to_database(db_connection)
-        # usuario2 = User.from_database(db_connection, usuario.id)
-        # print(usuario2)
-
-        # TESTE CLASSE DOCUMENTO DIGITAL=====================================================
-        # cliente = Client(
-        #     "Ruben",
-        #     "12345556",
-        #     "9992-33",
-        #     "4334120001-9",
-        #     "145, Rua cinco, Mondubim, Fortaleza - CE",
-        #     date(2023, 4, 10),
-        # )
-
-        # path = "C:/Users/ruben/Pictures/imagens 4k para fundo de tela/kuzan-one-piece-uhdpaper.com-4K-6.31.jpg"
-        # image = ImageClass("imagemTeste", image_path=path)
-        # document = DigitalDocument(
-        #     "agent1", "gaveta1", date(2024, 2, 12), 2000.00, 12345605, image, cliente
-        # )
-        # document.save_to_database(db_connection)
-
-        documento_recuperado = DigitalDocument.from_database(db_connection, 1)
-        print(documento_recuperado)
-        documento_recuperado.image.show_image()
-
+        path = "C:/Users/ruben/Pictures/imagens 4k para fundo de tela/10.jpg"
+        image = ImageClass("imagemKimetsuRaio", image_path=path)
+        document = DigitalDocument(
+            "agent3", "gaveta3", date(2024, 3, 12), 5000.00, 12345605, image, cliente
+        )
+        aplicacao = Application(
+            "Inserindo Cedula Bancaria",
+            datetime(2024, 2, 28, 8, 36, 2),
+            usuario,
+            document,
+        )
+        repository.save_applicacation(aplicacao)
+        aplicacao_rec = repository.get_application(2)
+        print(aplicacao_rec)
+        aplicacao_rec.digital_document.image.show_image()
     finally:
-        if db_connection.conn:
-            db_connection.close_connection()
+        pass
