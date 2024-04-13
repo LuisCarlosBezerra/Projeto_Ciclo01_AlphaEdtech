@@ -4,6 +4,23 @@ from models.client import Client
 
 
 class DigitalDocument:
+    """
+    Represents a digital document entity.
+
+    This class encapsulates information about a digital document, including the agent name,
+    physical location, contract date, credit value, certificate number, associated image,
+    and client.
+
+    Attributes:
+        id (int): The unique identifier of the digital document.
+        agent_name (str): The name of the agent associated with the digital document.
+        physical_location (str): The physical location of the digital document.
+        contract_date (date): The contract date of the digital document.
+        credit_value (float): The credit value of the digital document.
+        certificate_number (int): The certificate number of the digital document.
+        image (ImageClass): The image associated with the digital document.
+        client (Client): The client associated with the digital document.
+    """
 
     def __init__(
         self,
@@ -16,6 +33,19 @@ class DigitalDocument:
         client: Client,
         id: int = None,
     ) -> None:
+        """
+        Initializes a DigitalDocument instance with the provided attributes.
+
+        Args:
+            agent_name (str): The name of the agent associated with the digital document.
+            physical_location (str): The physical location of the digital document.
+            contract_date (date): The contract date of the digital document.
+            credit_value (float): The credit value of the digital document.
+            certificate_number (int): The certificate number of the digital document.
+            image (ImageClass): The image associated with the digital document.
+            client (Client): The client associated with the digital document.
+            id (int, optional): The unique identifier of the digital document.
+        """
         self.id = id
         self.agent_name = agent_name
         self.physical_location = physical_location
@@ -26,6 +56,12 @@ class DigitalDocument:
         self.client = client
 
     def save_to_database(self, db):
+        """
+        Saves the digital document instance to the database.
+
+        Args:
+            db (DatabaseConnection): The database connection object.
+        """
         self.image.save_to_database(db)
         self.client.save_to_database(db)
         insert_query = """
@@ -34,7 +70,7 @@ class DigitalDocument:
         """
         db.execute_query(
             insert_query,
-            "Salvando Cliente",
+            "Salvando Documento",
             self.agent_name,
             self.physical_location,
             self.contract_date,
@@ -47,6 +83,16 @@ class DigitalDocument:
 
     @staticmethod
     def from_database(db, document_id):
+        """
+        Retrieves a DigitalDocument instance from the database based on the provided document ID.
+
+        Args:
+            db (DatabaseConnection): The database connection object.
+            document_id (int): The ID of the digital document to retrieve.
+
+        Returns:
+            DigitalDocument: The DigitalDocument instance retrieved from the database.
+        """
         select_query = """
         SELECT d.id_documento, d.nome_agente, d.localizacao_fisica, d.data_contrato,  d.valor_credito,
 		d.numero_cedula, i.id_imagem, i.nome_imagem, i.imagem, ci.id_cliente, 
@@ -100,4 +146,10 @@ class DigitalDocument:
             return None
 
     def __str__(self) -> str:
-        return f"Documento Digital = ( id = {self.id}, nome_agente = {self.agent_name}, localizacao_fisica = {self.physical_location}, data_contrato = {self.contract_date}, valor_credito = {self.credit_value}, numero_cedula = {self.certificate_number}, id_imagem = {self.image}, id_cliente = {self.client})"
+        """
+        Returns a string representation of the DigitalDocument instance.
+
+        Returns:
+            str: A string representation of the DigitalDocument instance.
+        """
+        return f"Documento Digital = ( id = {self.id}, nome_agente = {self.agent_name}, localizacao_fisica = {self.physical_location}, data_contrato = {self.contract_date}, valor_credito = {self.credit_value}, numero_cedula = {self.certificate_number}, imagem = {self.image}, cliente = {self.client})"
