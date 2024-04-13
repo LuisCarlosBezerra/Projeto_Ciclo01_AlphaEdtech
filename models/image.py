@@ -5,6 +5,18 @@ import matplotlib.pyplot as plt
 
 
 class ImageClass:
+    """
+    Represents an image entity.
+
+    This class encapsulates information about an image, including its name, data, and path.
+
+    Attributes:
+        id (int): The unique identifier of the image.
+        image_name (str): The name of the image.
+        image_data (Image): The image data (PIL Image object).
+        image_path (str): The path to the image file.
+    """
+
     def __init__(
         self,
         image_name: str,
@@ -12,6 +24,15 @@ class ImageClass:
         image_path: str = None,
         id: int = None,
     ) -> None:
+        """
+        Initializes an ImageClass instance with the provided attributes.
+
+        Args:
+            image_name (str): The name of the image.
+            image_data (Image, optional): The image data (PIL Image object).
+            image_path (str, optional): The path to the image file.
+            id (int, optional): The unique identifier of the image.
+        """
         self.id = id
         self.image_name = image_name
         self.image_data = image_data
@@ -28,6 +49,12 @@ class ImageClass:
             self.image_data = Image.open(imagem_stream)
 
     def save_to_database(self, db):
+        """
+        Saves the image instance to the database.
+
+        Args:
+            db (DatabaseConnection): The database connection object.
+        """
         insert_query = """
         INSERT INTO imagens (nome_imagem, imagem) VALUES (%s, %s) RETURNING id_imagem;
         """
@@ -41,6 +68,16 @@ class ImageClass:
 
     @staticmethod
     def from_database(db, image_id):
+        """
+        Retrieves an ImageClass instance from the database based on the provided image ID.
+
+        Args:
+            db (DatabaseConnection): The database connection object.
+            image_id (int): The ID of the image to retrieve.
+
+        Returns:
+            ImageClass: The ImageClass instance retrieved from the database.
+        """
         select_query = """
         SELECT id_imagem, nome_imagem, imagem FROM imagens
         WHERE imagens.id_imagem = %s;
@@ -58,9 +95,24 @@ class ImageClass:
             return None
 
     def show_image(self):
+        """
+        Displays the image using Matplotlib.
+
+        This method displays the image using Matplotlib's imshow function.
+
+        """
         if self.image_data is not None:
             plt.imshow(self.image_data)
             plt.show()
             print("INFO: Imagem mostrada com sucesso!")
         else:
             print("INFO: Imagem mostrada sem sucesso!")
+
+    def __str__(self) -> str:
+        """
+        Returns a string representation of the ImageClass instance.
+
+        Returns:
+            str: A string representation of the ImageClass instance.
+        """
+        return f"Imagem = ( id = {self.id}, nome da Imagem = {self.image_name})"
