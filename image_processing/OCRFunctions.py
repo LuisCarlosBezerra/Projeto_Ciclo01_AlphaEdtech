@@ -23,7 +23,7 @@ import pytesseract
 from pytesseract import Output
 import cv2
 
-
+#pytesseract.pytesseract.tesseract_cmd = "C:/Program Files/Tesseract-OCR/tesseract.exe"
 
 
 
@@ -73,6 +73,6 @@ def extraiTexto(file_path):
         
     
     
-path = '/home/souzaigor499/Desafio/Projeto_Ciclo01_AlphaEdtech/ImagensTeste/ola.jpg'
+path = 'C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/ImagensTeste/IMG_20240403_163932.jpg'
 
 print(extraiTexto(path))

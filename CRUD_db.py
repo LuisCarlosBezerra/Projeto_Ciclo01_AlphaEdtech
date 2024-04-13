@@ -61,7 +61,7 @@ def ler_imagem(image_id):
     """
     try:
         with conexao.cursor() as cursor:
-            sql = "SELECT nome_imagem, imagem FROM imagens WHERE id_imagem = %s"
+            sql = "SELECT nome_imagem, imagem FROM imagem WHERE id_imagem = %s"
             cursor.execute(sql, (image_id,))
             registro = cursor.fetchone()
 
@@ -110,6 +110,33 @@ def inserir_dados_cliente(nome, cpf, agencia, conta, endereco, data_nascimento):
         print("Erro ao inserir dados:", e)
         conexao.rollback()
         return False
+    
+#Consultar dados por CLIENTE
+def consultar_cliente_id(id_cliente):
+    """
+    Consulta cliente por id
+
+    Args:
+        id_cliente(int): ID do cliente à ser consultado.
+
+    """
+    try:
+        with conexao.cursor() as cursor:
+            sql = "SELECT nome, cpf, agencia, conta, endereco, data_nascimento FROM cliente WHERE id_cliente = %s"
+            cursor.execute(sql, (id_cliente))
+            registros = cursor.fetchall()
+
+            if registros is not None:
+                for registro in registros:
+                    nome, cpf, agencia, conta, endereco, data_nascimento = registro
+                    print(
+                        f"INFO: {registro}"
+                    )
+            else:
+                print("INFO: Nenhuma imagem encontrada com o ID especificado.")
+    except Exception as e:
+        print("INFO: Erro ao ler imagem do banco de dados.")
+        print(f"ERROR: {e}")
 
 
 #--------------------------------TABELA DOCUMENTO------------------------------------------
@@ -197,7 +224,12 @@ def inserir_dados_aplicacao(tipo_manipulacao, data_hora, id_usuario, id_document
         print("Erro ao inserir dados:", e)
         conexao.rollback()
         return False
-    
+
+
+
+
+
+
 if __name__ == "__main__":
     #VARIÁVEIS PARA TESTE INSERIR DOCUMENTO
     nome_agente = 'Luciano Mendes' 
@@ -205,18 +237,20 @@ if __name__ == "__main__":
     data_contrato = '20/08/2000'
     valor_credito = 20500.57
     numero_cedula = '002458-87'
-    id_imagem = 3
-    id_cliente = 5
+    id_imagem = 2
+    id_cliente = 2
     imagem = 'ImagensTeste/IMG_20240403_163932.jpg'
 
     
-    inserir_imagem(imagem, 'cedula01')
+    #inserir_imagem(imagem, 'cedula01')
     # inserir_dados_cliente('Luis Carlos da Silva Bezerra', '002.754.533-40', '5555-5', '22222-0', 'Rua José Carneiro da Silva, n1234', '1985/11/26')
-    # inserir_dados_documento(nome_agente, localizacao_fisica, data_contrato, valor_credito, numero_cedula, id_imagem, id_cliente)
+    #inserir_dados_documento(nome_agente, localizacao_fisica, data_contrato, valor_credito, numero_cedula, id_imagem, id_cliente)
     # inserir_dados_usuario('Fulano de Tal', '888.777.222-99', 'user01', 'abc123')
-    # inserir_dados_aplicacao('Inserção', '2023/12/15 15:55', 1, 1)
+    inserir_dados_aplicacao('Inserção', '2023/12/15 15:55', 2, 3)
+    #ler_imagem(1)
    
-
+    #CONSULTAS
+    #consultar_cliente_id('1')
 '''
 #------------------------------------------------ANTIGO---------------------------------------
 
