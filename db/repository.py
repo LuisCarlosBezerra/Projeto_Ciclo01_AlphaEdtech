@@ -1,108 +1,62 @@
-import psycopg2 as p
 from db.connection import DatabaseConnection
-from io import BytesIO
-from PIL import Image
-import matplotlib.pyplot as plt
+from models.application import Application
 
 
-class DatabaseQueries:
+class Repository:
     """
-    Class to execute queries in PostgreSQL database.
+    A repository class for managing interactions with a PostgreSQL database.
+
+    This class provides methods for saving and retrieving application data from the database.
+
+    Attributes:
+        db (DatabaseConnection): An instance of the DatabaseConnection class for managing
+        database connections.
     """
 
-    def __init__(self, connection):
+    def __init__(self, dbname, user, password, host="localhost", port=5432):
         """
-        Initializes the class with the database connection object.
+        Initializes the Repository with connection parameters.
 
         Args:
-            connection (connection): Database connection object.
+            dbname (str): The name of the database.
+            user (str): The username for accessing the database.
+            password (str): The password for accessing the database.
+            host (str, optional): The hostname of the database server. Defaults to "localhost".
+            port (int, optional): The port number of the database server. Defaults to 5432.
         """
-        self.connection = connection
+        self.db = DatabaseConnection(
+            dbname=dbname, user=user, password=password, host=host, port=port
+        )
 
-    def insert_image(self, image_path, image_name):
+    def save_applicacation(self, app):
         """
-        Inserts an image into the database.
+        Saves an application to the database.
 
         Args:
-            image_path (str): Path of the image file.
-            image_name (str): Name of the image.
+            app (Application): The application object to be saved to the database.
+        """
+        app.save_to_database(self.db)
+
+    def get_application(self, app_id):
+        """
+        Retrieves an application from the database.
+
+        Args:
+            app_id (int): The ID of the application to retrieve.
 
         Returns:
-            bool: True if insertion is successful, False otherwise.
+            Application: The application object retrieved from the database.
+        """
+        return Application.from_database(self.db, app_id)
+
+    def __del__(self) -> None:
+        """
+        Closes the database connection when the Repository object is deleted.
         """
         try:
-            with self.connection.cursor() as cursor:
-                with open(image_path, "rb") as image_file:
-                    img = image_file.read()
-
-                    cursor.execute(
-                        f"""
-                        INSERT INTO imagens (nome_imagem, imagem) 
-                            VALUES ('{image_name}', {p.Binary(img)});
-                        """
-                    )
-
-                print("INFO: Inserção realizada com sucesso.")
-                self.connection.commit()
-                return True
+            self.db.close_connection()
         except Exception as e:
-            print("INFO: Erro ao inserir imagem no banco de dados.")
-            print(f"ERROR: {e}")
-            self.connection.rollback()
-            return False
-
-    def read_image(self, image_id):
-        """
-        Reads an image from the database and displays it.
-
-        Args:
-            image_id (int): ID of the image to be read.
-
-        """
-        try:
-            with self.connection.cursor() as cursor:
-                sql = "SELECT nome_imagem, imagem FROM imagens WHERE id_imagem = %s"
-                cursor.execute(sql, (image_id,))
-                registro = cursor.fetchone()
-
-                if registro is not None:
-                    nome_imagem, dados_imagem = registro
-                    imagem_stream = BytesIO(dados_imagem)
-                    imagem = Image.open(imagem_stream)
-                    nome_arquivo_saida = f"imagem_recuperada_{image_id}.jpg"
-                    plt.imshow(imagem)
-                    plt.show()
-                    print(
-                        f"INFO: Imagem {nome_imagem} recuperada e salva como {nome_arquivo_saida}"
-                    )
-                else:
-                    print("INFO: Nenhuma imagem encontrada com o ID especificado.")
-        except Exception as e:
-            print("INFO: Erro ao ler imagem do banco de dados.")
-            print(f"ERROR: {e}")
+            pass
 
 
-# Example usage of the classes
-if __name__ == "__main__":
-    try:
-        db_connection = DatabaseConnection(
-            user="postgres",
-            password="12345",
-            host="localhost",
-            dbname="sistema_banco_ocr",
-        )
-        connection = db_connection.connect()
-
-        db_queries = DatabaseQueries(connection)
-        result = db_queries.insert_image(
-            image_path="C:/Users/ruben/Documents/ALPHAEDTECH/HARD/CICLO-1/Projeto_Ciclo01_AlphaEdtech/imagens-teste/cedula-banco-daycoval-menor.png",
-            image_name="imagem.jpg",
-        )
-
-        if result:
-            print("INFO: Imagem inserida com sucesso!")
-        else:
-            print("INFO: Falha ao inserir imagem.")
-    finally:
-        if connection:
-            db_connection.disconnect(connection)
+#

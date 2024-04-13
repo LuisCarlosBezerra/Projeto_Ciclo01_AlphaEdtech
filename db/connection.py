@@ -3,10 +3,14 @@ import psycopg2 as p
 
 class DatabaseConnection:
     """
-    Class to manage the connection with PostgreSQL database.
+    Class to manage the connection with a PostgreSQL database.
+
+    Attributes:
+        conn: psycopg2 connection object.
+        cur: psycopg2 cursor object.
     """
 
-    def __init__(self, user, password, host, dbname):
+    def __init__(self, user, password, dbname, host="localhost", port=5432):
         """
         Initializes the class with connection parameters.
 
@@ -15,41 +19,74 @@ class DatabaseConnection:
             password (str): Database user's password.
             host (str): Database host address.
             dbname (str): Database name.
-        """
-        self.user = user
-        self.password = password
-        self.host = host
-        self.dbname = dbname
-
-    def connect(self):
-        """
-        Establishes a connection with the database.
-
-        Returns:
-            connection: Database connection object.
+            port (int): Database port number. Default is 5432.
         """
         try:
-            connection = p.connect(
-                user=self.user,
-                host=self.host,
-                password=self.password,
-                dbname=self.dbname,
+            self.conn = p.connect(
+                dbname=dbname, user=user, password=password, host=host, port=port
             )
+            self.cur = self.conn.cursor()
             print("INFO: Conexão estabelecida com o Banco de Dados.")
-            return connection
         except Exception as e:
             print("INFO: Conexão com o Banco de Dados não foi realizada!")
-            raise e
+            print(e)
+            print(
+                "INFO: Programa Encerrado, por problemas na conexão com o Bando de Dados!"
+            )
+            exit()
 
-    def disconnect(self, connection):
+    def execute_query(self, query, type_query, *args):
         """
-        Closes the connection with the database.
+        Execute a SQL query and commit the transaction.
 
         Args:
-            connection (connection): Database connection object.
+            query (str): SQL query string.
+            type_query (str): Type of SQL query (e.g., 'SELECT', 'INSERT', 'UPDATE', 'DELETE').
+            *args: Parameters to be passed to the query.
+
+        Raises:
+            Exception: If an error occurs while executing the query.
         """
+
         try:
-            connection.close()
+            self.cur.execute(query, args)
+            print(f"INFO: Sucesso ao executar '{type_query}' no banco de dados.")
+            self.conn.commit()
+        except Exception as e:
+            print(f"INFO: Erro ao executar {type_query} do banco de dados.")
+            print(f"ERROR: {e}")
+            self.conn.rollback()
+
+    def fetch_data(self, query, *args):
+        """
+        Execute a SQL query and fetch the results.
+
+        Args:
+            query (str): SQL query string.
+            *args: Parameters to be passed to the query.
+
+        Returns:
+            list: A list containing the fetched data.
+
+        Raises:
+            Exception: If an error occurs while fetching the data.
+        """
+
+        self.cur.execute(query, args)
+        return self.cur.fetchall()
+
+    def close_connection(self):
+        """
+        Close the connection with the database.
+
+        Raises:
+            Exception: If an error occurs while closing the connection.
+        """
+
+        try:
+            self.cur.close()
+            self.conn.close()
+
             print("INFO: Conexão encerrada com o Banco de Dados.")
         except Exception as e:
             print("INFO: Erro ao encerrar conexão com o Banco de Dados!")
