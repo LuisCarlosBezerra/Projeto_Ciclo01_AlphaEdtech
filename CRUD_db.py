@@ -245,8 +245,8 @@ if __name__ == "__main__":
     #inserir_imagem(imagem, 'cedula01')
     # inserir_dados_cliente('Luis Carlos da Silva Bezerra', '002.754.533-40', '5555-5', '22222-0', 'Rua José Carneiro da Silva, n1234', '1985/11/26')
     #inserir_dados_documento(nome_agente, localizacao_fisica, data_contrato, valor_credito, numero_cedula, id_imagem, id_cliente)
-    # inserir_dados_usuario('Fulano de Tal', '888.777.222-99', 'user01', 'abc123')
-    inserir_dados_aplicacao('Inserção', '2023/12/15 15:55', 2, 3)
+    inserir_dados_usuario('Fulano de Tal', '888.777.222-99', 'user01', 'abc123')
+    #inserir_dados_aplicacao('Inserção', '2023/12/15 15:55', 2, 3)
     #ler_imagem(1)
    
     #CONSULTAS
