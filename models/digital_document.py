@@ -103,7 +103,6 @@ class DigitalDocument:
         WHERE d.id_documento = %s;
         """
         data = db.fetch_data(select_query, document_id)
-        print(data)
         if data:
             (
                 id_document,
@@ -142,6 +141,282 @@ class DigitalDocument:
                     birth_date=birth_date,
                 ),
             )
+        else:
+            return None
+
+    @staticmethod
+    def array_from_db_by_certificate_number(
+        db, certificate_number
+    ) -> list["DigitalDocument"]:
+        """
+        Retrieves an array of DigitalDocument instances from the database based on the provided certificate number.
+
+        Args:
+            db (DatabaseConnection): The database connection object.
+            certificate_number (str): The certificate number or a portion of it to search for.
+
+        Returns:
+            List[DigitalDocument] or None: An array of DigitalDocument instances retrieved from the database
+                that match the provided certificate number. Returns None if no matching documents are found.
+        """
+        select_query = """
+        SELECT d.id_documento, d.nome_agente, d.localizacao_fisica, d.data_contrato,  d.valor_credito,
+		d.numero_cedula, i.id_imagem, i.nome_imagem, i.imagem, ci.id_cliente, 
+		ci.nome, ci.cpf, ci.agencia, ci.conta, ci.endereco, ci.data_nascimento 
+		FROM documento_digital d
+        LEFT JOIN cliente ci ON d.id_cliente = ci.id_cliente
+        LEFT JOIN imagens i ON d.id_imagem = i.id_imagem
+        WHERE d.numero_cedula LIKE %s;
+        """
+        data = db.fetch_data(select_query, f"%{certificate_number}%")
+        documents = []
+        if data:
+            for d in data:
+
+                (
+                    id_document,
+                    agent_name,
+                    physical_location,
+                    contract_date,
+                    credit_value,
+                    c_number,
+                    id_image,
+                    image_name,
+                    image,
+                    id_client,
+                    client_name,
+                    cpf,
+                    agency,
+                    account,
+                    address,
+                    birth_date,
+                ) = d
+                documents.append(
+                    DigitalDocument(
+                        id=id_document,
+                        agent_name=agent_name,
+                        physical_location=physical_location,
+                        contract_date=contract_date,
+                        credit_value=credit_value,
+                        certificate_number=c_number,
+                        image=ImageClass(
+                            id=id_image, image_data=image, image_name=image_name
+                        ),
+                        client=Client(
+                            id=id_client,
+                            name=client_name,
+                            cpf=cpf,
+                            agency=agency,
+                            account=account,
+                            address=address,
+                            birth_date=birth_date,
+                        ),
+                    )
+                )
+
+            return documents
+        else:
+            return None
+
+    @staticmethod
+    def from_db_by_certificate_number(db, certificate_number) -> "DigitalDocument":
+        """
+        Retrieves a DigitalDocument instance from the database based on the provided certificate number.
+
+        Args:
+            db (DatabaseConnection): The database connection object.
+            certificate_number (str): The certificate number to search for.
+
+        Returns:
+            DigitalDocument or None: The DigitalDocument instance retrieved from the database
+                that matches the provided certificate number. Returns None if no matching document is found.
+        """
+        select_query = """
+        SELECT d.id_documento, d.nome_agente, d.localizacao_fisica, d.data_contrato,  d.valor_credito,
+		d.numero_cedula, i.id_imagem, i.nome_imagem, i.imagem, ci.id_cliente, 
+		ci.nome, ci.cpf, ci.agencia, ci.conta, ci.endereco, ci.data_nascimento 
+		FROM documento_digital d
+        LEFT JOIN cliente ci ON d.id_cliente = ci.id_cliente
+        LEFT JOIN imagens i ON d.id_imagem = i.id_imagem
+        WHERE d.numero_cedula = %s;
+        """
+        data = db.fetch_data(select_query, certificate_number)
+        if data:
+            (
+                id_document,
+                agent_name,
+                physical_location,
+                contract_date,
+                credit_value,
+                c_number,
+                id_image,
+                image_name,
+                image,
+                id_client,
+                client_name,
+                cpf,
+                agency,
+                account,
+                address,
+                birth_date,
+            ) = data[0]
+
+            return DigitalDocument(
+                id=id_document,
+                agent_name=agent_name,
+                physical_location=physical_location,
+                contract_date=contract_date,
+                credit_value=credit_value,
+                certificate_number=c_number,
+                image=ImageClass(id=id_image, image_data=image, image_name=image_name),
+                client=Client(
+                    id=id_client,
+                    name=client_name,
+                    cpf=cpf,
+                    agency=agency,
+                    account=account,
+                    address=address,
+                    birth_date=birth_date,
+                ),
+            )
+        else:
+            return None
+
+    @staticmethod
+    def from_db_by_choice(
+        db,
+        ct_date_init=None,
+        ct_date_last=None,
+        ag_name=None,
+        cr_value_init=None,
+        cr_value_last=None,
+        cl_name=None,
+    ) -> list["DigitalDocument"]:
+        """
+        Retrieves DigitalDocument instances from the database based on the provided criteria.
+
+        Args:
+            db (DatabaseConnection): The database connection object.
+            ct_date_init (str): The initial contract date to search for.
+            ct_date_last (str): The last contract date to search for.
+            ag_name (str): The agent name to search for.
+            cr_value_init (float): The initial credit value to search for.
+            cr_value_last (float): The last credit value to search for.
+            cl_name (str): The client name to search for.
+
+        Returns:
+            List[DigitalDocument] or None: A list of DigitalDocument instances retrieved from the database
+                based on the provided criteria. Returns None if no matching documents are found.
+        """
+        if (
+            cl_name
+            and ag_name is None
+            and ct_date_init is None
+            and ct_date_last is None
+            and cr_value_init is None
+            and cr_value_last is None
+        ):
+            return Client.documents_from_db_by_name(
+                db, cl_name=cl_name, class_document=DigitalDocument
+            )
+        values = ()
+        select_query = """
+        SELECT d.id_documento, d.nome_agente, d.localizacao_fisica, d.data_contrato,  d.valor_credito,
+		d.numero_cedula, i.id_imagem, i.nome_imagem, i.imagem, ci.id_cliente, 
+		ci.nome, ci.cpf, ci.agencia, ci.conta, ci.endereco, ci.data_nascimento 
+		FROM documento_digital d
+        LEFT JOIN cliente ci ON d.id_cliente = ci.id_cliente
+        LEFT JOIN imagens i ON d.id_imagem = i.id_imagem
+        WHERE"""
+        if ag_name:
+            values = values + (f"%{ag_name}%",)
+            select_query += " LOWER(d.nome_agente) LIKE LOWER(%s)"
+        if cr_value_init:
+            values = values + (cr_value_init, cr_value_last)
+            if len(select_query) == 409:
+                select_query += " d.valor_credito BETWEEN %s AND %s"
+            else:
+                select_query += " AND d.valor_credito BETWEEN %s AND %s"
+        if ct_date_init:
+            values = values + (ct_date_init, ct_date_last)
+            if len(select_query) == 409:
+                select_query += " d.data_contrato BETWEEN %s AND %s"
+            else:
+                select_query += " AND d.data_contrato BETWEEN %s AND %s"
+        select_query += ";"
+
+        data = db.fetch_data(select_query, *values)
+        documents = []
+        if data:
+            for d in data:
+
+                (
+                    id_document,
+                    agent_name,
+                    physical_location,
+                    contract_date,
+                    credit_value,
+                    c_number,
+                    id_image,
+                    image_name,
+                    image,
+                    id_client,
+                    client_name,
+                    cpf,
+                    agency,
+                    account,
+                    address,
+                    birth_date,
+                ) = d
+                if cl_name:
+                    if cl_name.lower() in client_name.lower():
+                        documents.append(
+                            DigitalDocument(
+                                id=id_document,
+                                agent_name=agent_name,
+                                physical_location=physical_location,
+                                contract_date=contract_date,
+                                credit_value=credit_value,
+                                certificate_number=c_number,
+                                image=ImageClass(
+                                    id=id_image, image_data=image, image_name=image_name
+                                ),
+                                client=Client(
+                                    id=id_client,
+                                    name=client_name,
+                                    cpf=cpf,
+                                    agency=agency,
+                                    account=account,
+                                    address=address,
+                                    birth_date=birth_date,
+                                ),
+                            )
+                        )
+                else:
+                    documents.append(
+                        DigitalDocument(
+                            id=id_document,
+                            agent_name=agent_name,
+                            physical_location=physical_location,
+                            contract_date=contract_date,
+                            credit_value=credit_value,
+                            certificate_number=c_number,
+                            image=ImageClass(
+                                id=id_image, image_data=image, image_name=image_name
+                            ),
+                            client=Client(
+                                id=id_client,
+                                name=client_name,
+                                cpf=cpf,
+                                agency=agency,
+                                account=account,
+                                address=address,
+                                birth_date=birth_date,
+                            ),
+                        )
+                    )
+
+            return documents
         else:
             return None
 
