@@ -1,5 +1,8 @@
 from datetime import date
 
+# from models.digital_document import DigitalDocument
+from models.image import ImageClass
+
 
 class Client:
     """
@@ -109,6 +112,81 @@ class Client:
                 address=address,
                 birth_date=birth_date,
             )
+        else:
+            return None
+
+    @staticmethod
+    def documents_from_db_by_name(db, cl_name, class_document):
+        """
+        Retrieves a list of document instances associated with a client name from the database.
+
+        Args:
+            db (DatabaseConnection): The database connection object.
+            cl_name (str): The name of the client or a portion of it to search for.
+            class_document (class): The class of the document instances to be retrieved.
+
+        Returns:
+            List[Document] or None: A list of document instances retrieved from the database
+                that match the provided client name. Returns None if no matching documents are found.
+        """
+        select_query = """
+        SELECT d.id_documento, d.nome_agente, d.localizacao_fisica, d.data_contrato,  d.valor_credito,
+                d.numero_cedula, i.id_imagem, i.nome_imagem, i.imagem, ci.id_cliente,
+                ci.nome, ci.cpf, ci.agencia, ci.conta, ci.endereco, ci.data_nascimento
+                FROM cliente ci
+        LEFT JOIN documento_digital d ON d.id_cliente = ci.id_cliente
+        LEFT JOIN imagens i ON d.id_imagem = i.id_imagem
+        WHERE LOWER(ci.nome) LIKE LOWER(%s);
+        """
+
+        data = db.fetch_data(select_query, f"%{cl_name}%")
+        documents = []
+        if data:
+            for d in data:
+
+                (
+                    id_document,
+                    agent_name,
+                    physical_location,
+                    contract_date,
+                    credit_value,
+                    c_number,
+                    id_image,
+                    image_name,
+                    image,
+                    id_client,
+                    client_name,
+                    cpf,
+                    agency,
+                    account,
+                    address,
+                    birth_date,
+                ) = d
+                if cl_name.lower() in client_name.lower():
+                    documents.append(
+                        class_document(
+                            id=id_document,
+                            agent_name=agent_name,
+                            physical_location=physical_location,
+                            contract_date=contract_date,
+                            credit_value=credit_value,
+                            certificate_number=c_number,
+                            image=ImageClass(
+                                id=id_image, image_data=image, image_name=image_name
+                            ),
+                            client=Client(
+                                id=id_client,
+                                name=client_name,
+                                cpf=cpf,
+                                agency=agency,
+                                account=account,
+                                address=address,
+                                birth_date=birth_date,
+                            ),
+                        )
+                    )
+
+            return documents
         else:
             return None
 
