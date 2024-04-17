@@ -1,7 +1,7 @@
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage
 import classe_tela_login
-
+import os
 class TelaCadastro(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -26,8 +26,13 @@ class TelaCadastro(Tk):
         )
         self.canvas.place(x=0, y=0)
 
-        self.output_path = Path(__file__).parent
-        self.assets_path = self.output_path / Path(r"E:\Alpha\Interface\Telas\TELAS\TELAS TKINTER\TELA_CADASTRO\build\assets\frame0")
+        self.output_path = os.path.abspath(os.path.dirname(__file__)).replace(
+            "\CLASSES_TELAS", ""
+        )
+        self.assets_path = (
+            Path(self.output_path)
+            / f"TELAS TKINTER\TELA_CADASTRO\\build\\assets\\frame0"
+        )
         self.relative_to_assets = lambda path: self.assets_path / Path(path)
 
         self.create_elements()
@@ -112,7 +117,7 @@ class TelaCadastro(Tk):
             503.0,
             fill="#FFFFFF",
             outline="")
-        
+
         self.images = {}
         self.images["button_1"] = PhotoImage(file=self.relative_to_assets("button_1.png"))
         self.images["button_2"] = PhotoImage(file=self.relative_to_assets("button_2.png"))
@@ -242,6 +247,6 @@ class TelaCadastro(Tk):
         # Crie uma nova instância da tela de login e execute
         tela_login = classe_tela_login.TelaLogin()
         tela_login.run()
-        
+
     def run(self):
         self.mainloop()
