@@ -26,16 +26,16 @@ user = input('Digite o seu nome de usuário: ')
 #consultar se o usuário existe no banco de dados
 with conexao.cursor() as cursor:
     try:
-        sql = f"SELECT user_name FROM Usuario WHERE user_name = '{user}'"
-        cursor.execute(sql)
+        sql = f"SELECT user_name FROM Usuario WHERE user_name = %s"
+        cursor.execute(sql, (user,))
         registros = cursor.fetchall()
         if registros:
             if registros[0][0] == user:   
-                consulta = cursor.execute(f"SELECT senha FROM Usuario WHERE user_name = '{user}'")
+                sql_pass = f"SELECT senha FROM Usuario WHERE user_name = %s"
+                consulta = cursor.execute(sql_pass, (user,))
                 pass_db = cursor.fetchone()
                 try:
                     senha = check_password(input('Digite a sua senha cadastrada: '), pass_db[0])
-                    print(senha)
                 except Exception as error:
                     print(f'A função de verificação encontrou um problema. Talvez a senha salva no banco está em formato incorreto')
             else:
