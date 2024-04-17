@@ -79,7 +79,7 @@ def encontrarPalavras(alvos, palavrasEncontradas, img):
         if palavrasEncontradas:
             return list(palavrasEncontradas.values())
         else:
-            raise Exception("Palavra 'BANCARIO' não encontrada no MRZ.")
+            raise Exception
     
     except Exception as e:
         print(f"Ocorreu um erro ao encontrar palavras: {e}")
