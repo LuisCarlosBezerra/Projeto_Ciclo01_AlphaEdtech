@@ -9,7 +9,7 @@ class TelaCadastro(Tk):
         self.appearence()
 
     def layout_config(self):
-        self.title('Projeto')    
+        self.title('OCRCreditBank')   
         self.geometry("778x503")
         self.configure(bg="#FFFFFF")
         self.resizable(False, False)
@@ -27,11 +27,11 @@ class TelaCadastro(Tk):
         self.canvas.place(x=0, y=0)
 
         self.output_path = os.path.abspath(os.path.dirname(__file__)).replace(
-            "\CLASSES_TELAS", ""
+            "\\CLASSES_TELAS", ""
         )
         self.assets_path = (
             Path(self.output_path)
-            / f"TELAS TKINTER\TELA_CADASTRO\\build\\assets\\frame0"
+            / f"TELAS TKINTER\\TELA_CADASTRO\\build\\assets\\frame0"
         )
         self.relative_to_assets = lambda path: self.assets_path / Path(path)
 
@@ -199,7 +199,8 @@ class TelaCadastro(Tk):
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_1 clicked"),
-            relief="flat"
+            relief="flat",
+            bg=self.cget('bg')
         )
         button_1.place(
             x=593.0,
@@ -214,7 +215,8 @@ class TelaCadastro(Tk):
             borderwidth=0,
             highlightthickness=0,
             command=self.voltar_para_login,
-            relief="flat"
+            relief="flat",
+            bg=self.cget('bg')
         )
         button_2.place(
             x=501.0,

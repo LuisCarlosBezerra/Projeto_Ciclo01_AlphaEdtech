@@ -13,7 +13,7 @@ class TelaEdicaoArquivo(Tk):
         self.appearence()
 
     def layout_config(self):
-        self.title("Projeto")
+        self.title('OCRCreditBank')
         self.geometry("1030x520")
         self.configure(bg="#FFFFFF")
         self.resizable(False, False)
@@ -31,11 +31,11 @@ class TelaEdicaoArquivo(Tk):
         self.canvas.place(x=0, y=0)
 
         self.output_path = os.path.abspath(os.path.dirname(__file__)).replace(
-            "\CLASSES_TELAS", ""
+            "\\CLASSES_TELAS", ""
         )
         self.assets_path = (
             Path(self.output_path)
-            / f"TELAS TKINTER\TELA_EDICAO_ARQUIVO\\build\\assets\\frame0"
+            / f"TELAS TKINTER\\TELA_EDICAO_ARQUIVO\\build\\assets\\frame0"
         )
         self.relative_to_assets = lambda path: self.assets_path / Path(path)
 
@@ -149,6 +149,7 @@ class TelaEdicaoArquivo(Tk):
             highlightthickness=0,
             command=self.ir_para_inicial,
             relief="flat",
+            bg=self.cget('bg')
         )
         self.button_1.place(x=484.0, y=437.0, width=93.0, height=29.0)
 
@@ -159,6 +160,7 @@ class TelaEdicaoArquivo(Tk):
             highlightthickness=0,
             command=self.ir_para_inicial,
             relief="flat",
+            bg=self.cget('bg')
         )
         self.button_2.place(x=604.0, y=437.0, width=93.0, height=29.0)
 
@@ -218,3 +220,4 @@ class TelaEdicaoArquivo(Tk):
         # Crie uma nova instância da tela inicial e execute
         tela_inicial = classe_tela_inicial.TelaInicial()
         tela_inicial.run()
+

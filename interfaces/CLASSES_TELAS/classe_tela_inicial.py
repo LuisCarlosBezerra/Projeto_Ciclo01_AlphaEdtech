@@ -13,7 +13,7 @@ class TelaInicial(Tk):
         self.appearence()
 
     def layout_config(self):
-        self.title("Projeto")
+        self.title('OCRCreditBank')
         self.geometry("1030x520")
         self.configure(bg="#FFFFFF")
         self.resizable(False, False)
@@ -31,11 +31,11 @@ class TelaInicial(Tk):
         self.canvas.place(x=0, y=0)
 
         self.output_path = os.path.abspath(os.path.dirname(__file__)).replace(
-            "\CLASSES_TELAS", ""
+            "\\CLASSES_TELAS", ""
         )
         self.assets_path = (
             Path(self.output_path)
-            / f"TELAS TKINTER\TELA_INICIAL\\build\\assets\\frame0"
+            / f"TELAS TKINTER\\TELA_INICIAL\\build\\assets\\frame0"
         )
         self.relative_to_assets = lambda path: self.assets_path / Path(path)
 
@@ -52,6 +52,8 @@ class TelaInicial(Tk):
             highlightthickness=0,
             command=self.select_image,
             relief="flat",
+            bg='#D3D0CB',
+            activebackground='#D3D0CB'
         )
         self.button_1.place(x=840.0, y=244.0, width=100.0, height=100.0)
 
@@ -80,6 +82,7 @@ class TelaInicial(Tk):
             highlightthickness=0,
             command=lambda: print("button_2 clicked"),
             relief="flat",
+            bg=self.cget('bg')
         )
         self.button_2.place(x=17.0, y=100.0, width=155.0, height=24.0)
 
@@ -90,6 +93,7 @@ class TelaInicial(Tk):
             highlightthickness=0,
             command=self.ir_tela_pesquisar,
             relief="flat",
+            bg=self.cget('bg')
         )
         self.button_3.place(x=17.0, y=138.0, width=124.0, height=24.0)
 
@@ -100,6 +104,7 @@ class TelaInicial(Tk):
             highlightthickness=0,
             command=self.ir_tela_meus_arquivos,
             relief="flat",
+            bg=self.cget('bg')
         )
         self.button_4.place(x=17.0, y=176.0, width=162.0, height=24.0)
 
@@ -121,7 +126,7 @@ class TelaInicial(Tk):
     def select_image(self):
         file_path = filedialog.askopenfilename()
         if file_path:
-            # Verifique a extensão do arquivo para garantir que seja uma imagem
+            # Verifica a extensão do arquivo para garantir que seja uma imagem
             _, file_extension = os.path.splitext(file_path)
             if file_extension.lower() in [".jpg", ".jpeg", ".png"]:
                 print("Selected image:", file_path)
@@ -132,22 +137,22 @@ class TelaInicial(Tk):
                 )
 
     def ir_tela_edicao_arquivo(self, file_path):
-        # Destrua a tela inicial
+        # Destrói a tela inicial
         self.destroy()
-        # Crie uma nova instância da tela de edição de arquivo e execute
+        # Cria uma nova instância da tela de edição de arquivo e execute
         tela_edicao_arquivo = classe_tela_edicao_arquivo.TelaEdicaoArquivo(file_path)
         tela_edicao_arquivo.run()
 
     def ir_tela_pesquisar(self):
-        # Destrua a tela inicial
+        # Destrói a tela inicial
         self.destroy()
-        # Crie uma nova instância da tela de pesquisa e execute
+        # Cria uma nova instância da tela de pesquisa e execute
         tela_pesquisa = classe_tela_pesquisa.TelaPesquisa()
         tela_pesquisa.run()
 
     def ir_tela_meus_arquivos(self):
-        # Destrua a tela inicial
+        # Destrói a tela inicial
         self.destroy()
-        # Crie uma nova instância da tela de meus arquivos e execute
+        # Cria uma nova instância da tela de meus arquivos e execute
         tela_meus_arquivos = classe_tela_meus_arquivos.TelaMeusArquivos()
         tela_meus_arquivos.run()
