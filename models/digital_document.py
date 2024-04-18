@@ -420,6 +420,122 @@ class DigitalDocument:
         else:
             return None
 
+    def from_db_order_by(
+        db,
+        cl_name=True,
+        ag_name=False,
+        c_number=False,
+        cont_date=False,
+        cr_value=False,
+        asc=True,
+    ):
+        """
+        Executes a database query to return a list of digital documents sorted
+        based on criteria specified by the parameters.
+
+        Parameters:
+            db (DatabaseConnection): An instance of the database connection.
+            cl_name (bool): Sort by client name (default True).
+            ag_name (bool): Sort by agent name.
+            c_number (bool): Sort by certificate number.
+            cont_date (bool): Sort by contract date.
+            cr_value (bool): Sort by credit value.
+            asc (bool): Sort in ascending order (default True), False for descending.
+
+        Returns:
+            list: A list of `DigitalDocument` instances representing the retrieved documents, or
+            None if no information is found.
+
+        Exceptions:
+            May raise exceptions related to connection failures or query execution errors in the database.
+        """
+
+        select_query = """
+        SELECT d.id_documento, d.nome_agente, d.localizacao_fisica, d.data_contrato,  d.valor_credito,
+		d.numero_cedula, i.id_imagem, i.nome_imagem, i.imagem, ci.id_cliente, 
+		ci.nome, ci.cpf, ci.agencia, ci.conta, ci.endereco, ci.data_nascimento 
+		FROM documento_digital d
+        LEFT JOIN cliente ci ON d.id_cliente = ci.id_cliente
+        LEFT JOIN imagens i ON d.id_imagem = i.id_imagem
+        """
+        if ag_name == True or c_number == True or cont_date == True or cr_value == True:
+            cl_name = False
+
+        if cl_name == True:
+            if asc == True:
+                select_query += " ORDER BY ci.nome ASC;"
+            else:
+                select_query += " ORDER BY ci.nome DESC;"
+        elif ag_name == True:
+            if asc == True:
+                select_query += " ORDER BY d.nome_agente ASC;"
+            else:
+                select_query += " ORDER BY d.nome_agente DESC;"
+        elif c_number == True:
+            if asc == True:
+                select_query += " ORDER BY d.numero_cedula ASC;"
+            else:
+                select_query += " ORDER BY d.numero_cedula DESC;"
+        elif cont_date == True:
+            if asc == True:
+                select_query += " ORDER BY d.data_contrato ASC;"
+            else:
+                select_query += " ORDER BY d.data_contrato DESC;"
+        elif cr_value == True:
+            if asc == True:
+                select_query += " ORDER BY d.valor_credito ASC;"
+            else:
+                select_query += " ORDER BY d.valor_credito DESC;"
+        data = db.fetch_data(select_query)
+        documents = []
+        if data:
+            for d in data:
+
+                (
+                    id_document,
+                    agent_name,
+                    physical_location,
+                    contract_date,
+                    credit_value,
+                    certificate_number,
+                    id_image,
+                    image_name,
+                    image,
+                    id_client,
+                    client_name,
+                    cpf,
+                    agency,
+                    account,
+                    address,
+                    birth_date,
+                ) = d
+                documents.append(
+                    DigitalDocument(
+                        id=id_document,
+                        agent_name=agent_name,
+                        physical_location=physical_location,
+                        contract_date=contract_date,
+                        credit_value=credit_value,
+                        certificate_number=certificate_number,
+                        image=ImageClass(
+                            id=id_image, image_data=image, image_name=image_name
+                        ),
+                        client=Client(
+                            id=id_client,
+                            name=client_name,
+                            cpf=cpf,
+                            agency=agency,
+                            account=account,
+                            address=address,
+                            birth_date=birth_date,
+                        ),
+                    )
+                )
+
+            return documents
+        else:
+            return None
+
     def __str__(self) -> str:
         """
         Returns a string representation of the DigitalDocument instance.
