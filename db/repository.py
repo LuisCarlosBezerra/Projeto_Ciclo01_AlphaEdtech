@@ -99,6 +99,25 @@ class Repository:
             cl_name=cl_name,
         )
 
+    def get_documents_by_order(
+        self,
+        cl_name=True,
+        ag_name=False,
+        c_number=False,
+        cont_date=False,
+        cr_value=False,
+        asc=True,
+    ):
+        return DigitalDocument.from_db_order_by(
+            db=self.db,
+            cl_name=cl_name,
+            ag_name=ag_name,
+            c_number=c_number,
+            cont_date=cont_date,
+            cr_value=cr_value,
+            asc=asc,
+        )
+
     def __del__(self) -> None:
         """
         Closes the database connection when the Repository object is deleted.

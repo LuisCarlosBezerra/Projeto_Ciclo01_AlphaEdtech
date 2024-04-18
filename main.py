@@ -22,14 +22,14 @@ if __name__ == "__main__":
         db = repository.db
 
         # TESTE CLASSE APLICAÇÃO=======================================================
-        cliente = Client(
-            "Liane",
-            "12345556",
-            "9992-33",
-            "4334120001-9",
-            "145, Rua cinco, Centro, Pereiras - CE",
-            date(2023, 4, 10),
-        )
+        # cliente = Client(
+        #     "Liane",
+        #     "12345556",
+        #     "9992-33",
+        #     "4334120001-9",
+        #     "145, Rua cinco, Centro, Pereiras - CE",
+        #     date(2023, 4, 10),
+        # )
         # usuario = User(
         #     "Usuario2",
         #     "12345556",
@@ -71,16 +71,21 @@ if __name__ == "__main__":
 
         # TESTE COM A BUSCA PODENDO USAR O VALOR DE CRÉDITO, O NOME DO AGENTE, A DATA DE CONTRATO E
         # O NOME DO CLIENTE.
-        documentos = repository.get_document_by_choice(
-            # cr_value_init=2000,
-            # cr_value_last=5000,
-            # ag_name="a",
-            # ct_date_init="2024-02-12",
-            # ct_date_last="2024-04-12",
-            cl_name="a",
-        )
-        print(documentos[0])
-        print(documentos[1])
+        # documentos = repository.get_document_by_choice(
+        #     # cr_value_init=2000,
+        #     # cr_value_last=5000,
+        #     # ag_name="a",
+        #     # ct_date_init="2024-02-12",
+        #     # ct_date_last="2024-04-12",
+        #     cl_name="a",
+        # )
+        # print(documentos[0])
+        # print(documentos[1])
+
+        # TESTE ORDER BY
+        documentos = repository.get_documents_by_order()
+        for i in documentos:
+            print(i)
 
     finally:
         pass
