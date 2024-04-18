@@ -38,7 +38,7 @@ CREATE TABLE Aplicacao_Manipula (
 CREATE TABLE Imagem (
 		id_imagem SERIAL PRIMARY KEY UNIQUE,
 		nome_imagem VARCHAR NOT NULL,
-		imagem BYTEA NOT NULL,
+		imagem BYTEA NOT NULL
 );
 
 ALTER TABLE Aplicacao_Manipula
