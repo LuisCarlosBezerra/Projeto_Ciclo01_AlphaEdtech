@@ -1,4 +1,4 @@
-from tkinter import Tk, Canvas, Entry, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Button, PhotoImage, Frame, ttk
 from pathlib import Path
 import classe_tela_inicial
 import classe_tela_meus_arquivos
@@ -12,7 +12,7 @@ class TelaPesquisa(Tk):
         self.appearence()
 
     def layout_config(self):
-        self.title("Projeto")
+        self.title('OCRCreditBank')
         self.geometry("1030x520")
         self.configure(bg="#FFFFFF")
         self.resizable(False, False)
@@ -30,11 +30,11 @@ class TelaPesquisa(Tk):
         self.canvas.place(x=0, y=0)
 
         self.output_path = os.path.abspath(os.path.dirname(__file__)).replace(
-            "\CLASSES_TELAS", ""
+            "\\CLASSES_TELAS", ""
         )
         self.assets_path = (
             Path(self.output_path)
-            / f"TELAS TKINTER\TELA_PESQUISA\\build\\assets\\frame0"
+            / f"TELAS TKINTER\\TELA_PESQUISA\\build\\assets\\frame0"
         )
         self.relative_to_assets = lambda path: self.assets_path / Path(path)
 
@@ -65,6 +65,7 @@ class TelaPesquisa(Tk):
             highlightthickness=0,
             command=self.ir_para_inicial,
             relief="flat",
+            bg=self.cget('bg')
         )
         self.button_1.place(x=17.0, y=100.0, width=155.0, height=24.0)
 
@@ -76,6 +77,7 @@ class TelaPesquisa(Tk):
             highlightthickness=0,
             command=lambda: print("button_2 clicked"),
             relief="flat",
+            bg=self.cget('bg')
         )
         self.button_2.place(x=17.0, y=138.0, width=124.0, height=24.0)
 
@@ -87,6 +89,7 @@ class TelaPesquisa(Tk):
             highlightthickness=0,
             command=self.ir_tela_meus_arquivos,
             relief="flat",
+            bg=self.cget('bg')
         )
         self.button_3.place(x=17.0, y=176.0, width=162.0, height=24.0)
 
@@ -104,6 +107,8 @@ class TelaPesquisa(Tk):
             highlightthickness=0,
             command=lambda: print("button_4 clicked"),
             relief="flat",
+            bg='#D3D0CB',
+            activebackground='#D3D0CB'
         )
         self.button_4.place(x=895.0, y=431.0, width=93.0, height=29.0)
 
@@ -115,6 +120,8 @@ class TelaPesquisa(Tk):
             highlightthickness=0,
             command=lambda: print("button_5 clicked"),
             relief="flat",
+            bg='#D3D0CB',
+            activebackground='#D3D0CB'
         )
         self.button_5.place(x=772.0, y=431.0, width=93.0, height=29.0)
 
@@ -225,6 +232,30 @@ class TelaPesquisa(Tk):
             fill="#000000",
             font=("Poppins Light", 13 * -1),
         )
+
+        self.treeview_frame=Frame(self, bd=1, relief="solid", bg="#D9D9D9")
+        self.treeview_frame.place(x=205, y=85, width=537, height=435)
+        # Adicionando o TreeView ao LabelFrame
+        self.treeview = ttk.Treeview(self.treeview_frame, columns=('Nº Cédula', 'Agente', 'Titular', 'Valor','Data'), show='headings')
+        self.treeview.heading('Nº Cédula', text='Número da Cédula')
+        self.treeview.heading('Agente', text='Agente')
+        self.treeview.heading('Titular', text='Titular')
+        self.treeview.heading('Valor', text='Valor')
+        self.treeview.heading('Data', text='Data de Modificação')
+        self.treeview.pack(fill="both", expand=True)  # Preenche todo o espaço disponível
+
+        xscroll = ttk.Scrollbar(self.treeview, orient="horizontal")
+        yscroll = ttk.Scrollbar(self.treeview, orient="vertical")
+
+        # Adicionando as barras de rolagem
+        xscroll.pack(side="bottom", fill="x")
+        yscroll.pack(side="right", fill="y")
+
+        xscroll.config(command=self.treeview.xview)
+        yscroll.config(command=self.treeview.yview)
+
+        # Associando as barras de rolagem à treeview
+        self.treeview.config(xscrollcommand=xscroll.set, yscrollcommand=yscroll.set)
 
     def run(self):
         self.mainloop()

@@ -12,7 +12,7 @@ class TelaLogin(Tk):
         self.appearence()
 
     def layout_config(self):
-        self.title("Projeto")
+        self.title('OCRCreditBank')
         self.geometry("778x503")
         self.configure(bg="#FFFFFF")
         self.resizable(False, False)
@@ -30,13 +30,12 @@ class TelaLogin(Tk):
         self.canvas.place(x=0, y=0)
 
         self.output_path = os.path.abspath(os.path.dirname(__file__)).replace(
-            "\CLASSES_TELAS", ""
+            "\\CLASSES_TELAS", ""
         )
         self.assets_path = (
-            Path(self.output_path) / f"TELAS TKINTER\TELA_LOGIN\\build\\assets\\frame0"
+            Path(self.output_path) / f"TELAS TKINTER\\TELA_LOGIN\\build\\assets\\frame0"
         )
         self.relative_to_assets = lambda path: self.assets_path / Path(path)
-
         self.create_elements()
 
     def create_elements(self):
@@ -154,6 +153,7 @@ class TelaLogin(Tk):
             highlightthickness=0,
             command=self.ir_para_inicial,
             relief="flat",
+            bg=self.cget('bg')
         )
         button_1.place(x=593.0, y=389.0, width=110.0, height=35.0)
 
@@ -164,6 +164,7 @@ class TelaLogin(Tk):
             highlightthickness=0,
             command=self.ir_para_cadastro,
             relief="flat",
+            bg=self.cget('bg')
         )
         button_2.place(x=501.0, y=319.0, width=105.0, height=24.0)
 
