@@ -82,7 +82,9 @@ class DigitalDocument:
         try:
             self.id = db.cur.fetchone()[0]
         except Exception as error:
-            print(f'Dados não salvos no banco. Chaves únicas já existem no banco. Erro: {error}')
+            print(
+                f"Dados não salvos no banco. Chaves únicas já existem no banco. Erro: {error}"
+            )
 
     @staticmethod
     def from_database(db, document_id):
@@ -102,7 +104,7 @@ class DigitalDocument:
 		ci.nome, ci.cpf, ci.agencia, ci.conta, ci.endereco, ci.data_nascimento 
 		FROM documento_digital d
         LEFT JOIN cliente ci ON d.id_cliente = ci.id_cliente
-        LEFT JOIN imagens i ON d.id_imagem = i.id_imagem
+        LEFT JOIN imagem i ON d.id_imagem = i.id_imagem
         WHERE d.id_documento = %s;
         """
         data = db.fetch_data(select_query, document_id)
@@ -168,7 +170,7 @@ class DigitalDocument:
 		ci.nome, ci.cpf, ci.agencia, ci.conta, ci.endereco, ci.data_nascimento 
 		FROM documento_digital d
         LEFT JOIN cliente ci ON d.id_cliente = ci.id_cliente
-        LEFT JOIN imagens i ON d.id_imagem = i.id_imagem
+        LEFT JOIN imagem i ON d.id_imagem = i.id_imagem
         WHERE d.numero_cedula LIKE %s;
         """
         data = db.fetch_data(select_query, f"%{certificate_number}%")
@@ -240,7 +242,7 @@ class DigitalDocument:
 		ci.nome, ci.cpf, ci.agencia, ci.conta, ci.endereco, ci.data_nascimento 
 		FROM documento_digital d
         LEFT JOIN cliente ci ON d.id_cliente = ci.id_cliente
-        LEFT JOIN imagens i ON d.id_imagem = i.id_imagem
+        LEFT JOIN imagem i ON d.id_imagem = i.id_imagem
         WHERE d.numero_cedula = %s;
         """
         data = db.fetch_data(select_query, certificate_number)
@@ -329,7 +331,7 @@ class DigitalDocument:
 		ci.nome, ci.cpf, ci.agencia, ci.conta, ci.endereco, ci.data_nascimento 
 		FROM documento_digital d
         LEFT JOIN cliente ci ON d.id_cliente = ci.id_cliente
-        LEFT JOIN imagens i ON d.id_imagem = i.id_imagem
+        LEFT JOIN imagem i ON d.id_imagem = i.id_imagem
         WHERE"""
         if ag_name:
             values = values + (f"%{ag_name}%",)
@@ -459,7 +461,7 @@ class DigitalDocument:
 		ci.nome, ci.cpf, ci.agencia, ci.conta, ci.endereco, ci.data_nascimento 
 		FROM documento_digital d
         LEFT JOIN cliente ci ON d.id_cliente = ci.id_cliente
-        LEFT JOIN imagens i ON d.id_imagem = i.id_imagem
+        LEFT JOIN imagem i ON d.id_imagem = i.id_imagem
         """
         if ag_name == True or c_number == True or cont_date == True or cr_value == True:
             cl_name = False
