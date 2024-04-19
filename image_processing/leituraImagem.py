@@ -8,7 +8,7 @@ import cv2
 
 config_tesseract = '--tessdata-dir tessdata'
 
-img = cv2.imread('/home/souzaigor499/Desafio/Projeto_Ciclo01_AlphaEdtech/images/imgPrint/doc1.png', 0) # passar o caminho da imagem já precessada
+img = cv2.imread('C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/outputs_tests_images/output_anomalia_4.jpg', 0) # passar o caminho da imagem já precessada
 
 
 
@@ -32,7 +32,7 @@ def conteudoText(img):
 
     try:
         (height, width) = img.shape
-        (x, y, w, h) = (0, 0, width, height // 4)
+        (x, y, w, h) = (0, 0, width, height // 3)
 
         img_mrz = img[y:y+h, x:x+w]
 

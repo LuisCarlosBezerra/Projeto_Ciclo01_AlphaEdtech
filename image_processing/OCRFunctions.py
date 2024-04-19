@@ -61,9 +61,8 @@ def extraiTexto(file_path):
                 if confianca > minConf:
                     texto = dados['text'][i]
                     textoFinal += texto + ' '
-        
-            return textoFinal
     
+            return textoFinal, len(textoFinal)
     
     
     except FileNotFoundError as e:
@@ -72,7 +71,6 @@ def extraiTexto(file_path):
         print(f"Erro durante a extração do texto: {e}")
         
     
-    
-path = 'C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/ImagensTeste/IMG_20240403_163932.jpg'
-
-print(extraiTexto(path))
+if __name__ == '__main__':
+    path = 'C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/outputs_tests_images/output_anomalia_4.jpg'
+    print(extraiTexto(path))
