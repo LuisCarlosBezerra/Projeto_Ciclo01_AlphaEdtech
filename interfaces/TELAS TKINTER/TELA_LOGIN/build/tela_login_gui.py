@@ -4,19 +4,18 @@
 
 
 from pathlib import Path
+import os
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
-
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\david\Desktop\TI\EDTECH\DESAFIO_CICLO1\TKDESIGNER\Interface_Projeto\Interface_Projeto - Copia\Login\build\assets\frame0")
-
-
-def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
-
+# Auto path para mídias da tela
+output_path = os.path.abspath(os.path.dirname(__file__))
+assets_path = (
+            Path(output_path) / f"assets\\frame0"
+        )
+relative_to_assets = lambda path: assets_path / Path(path)
 
 window = Tk()
 
@@ -201,30 +200,6 @@ button_1.place(
     y=389.0,
     width=110.0,
     height=35.0
-)
-
-image_image_5 = PhotoImage(
-    file=relative_to_assets("image_5.png"))
-image_5 = canvas.create_image(
-    527.0,
-    166.0,
-    image=image_image_5
-)
-
-image_image_6 = PhotoImage(
-    file=relative_to_assets("image_6.png"))
-image_6 = canvas.create_image(
-    527.0,
-    252.0,
-    image=image_image_6
-)
-
-image_image_7 = PhotoImage(
-    file=relative_to_assets("image_7.png"))
-image_7 = canvas.create_image(
-    712.0,
-    50.0,
-    image=image_image_7
 )
 
 button_image_2 = PhotoImage(

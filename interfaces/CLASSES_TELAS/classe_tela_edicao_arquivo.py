@@ -39,6 +39,11 @@ class TelaEdicaoArquivo(Tk):
         )
         self.relative_to_assets = lambda path: self.assets_path / Path(path)
 
+        # Criar ícone da aplicação para janela
+        icon_path = self.relative_to_assets("logo.ico")
+        if os.path.exists(icon_path):
+            self.iconbitmap(icon_path)
+
         x_coord = 1030 - 291  # Largura da janela - largura do label
         y_coord = 520 - 418  # Altura da janela - altura do label
         y_coord -= 10
@@ -220,4 +225,3 @@ class TelaEdicaoArquivo(Tk):
         # Crie uma nova instância da tela inicial e execute
         tela_inicial = classe_tela_inicial.TelaInicial()
         tela_inicial.run()
-

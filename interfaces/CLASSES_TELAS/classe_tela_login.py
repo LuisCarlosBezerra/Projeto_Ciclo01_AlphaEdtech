@@ -36,6 +36,12 @@ class TelaLogin(Tk):
             Path(self.output_path) / f"TELAS TKINTER\\TELA_LOGIN\\build\\assets\\frame0"
         )
         self.relative_to_assets = lambda path: self.assets_path / Path(path)
+
+        # Criar ícone da aplicação para janela
+        icon_path = self.relative_to_assets("logo.ico")
+        if os.path.exists(icon_path):
+            self.iconbitmap(icon_path)
+
         self.create_elements()
 
     def create_elements(self):
