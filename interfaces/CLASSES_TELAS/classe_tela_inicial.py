@@ -1,17 +1,15 @@
 from tkinter import Tk, Canvas, Button, PhotoImage, filedialog, messagebox
 from pathlib import Path
-import classe_tela_edicao_arquivo
-import classe_tela_pesquisa
-import classe_tela_meus_arquivos
 import os
-
-
+from db.repository import Repository
+from user_DB import DB_NAME, USER, PASSWORD
 class TelaInicial(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.layout_config()
         self.appearence()
-
+        self.repository = Repository(DB_NAME, USER, PASSWORD)
+        
     def layout_config(self):
         self.title('OCRCreditBank')
         self.geometry("1030x520")
@@ -156,21 +154,24 @@ class TelaInicial(Tk):
         # Destrói a tela inicial
         self.destroy()
         # Cria uma nova instância da tela de edição de arquivo e execute
-        tela_edicao_arquivo = classe_tela_edicao_arquivo.TelaEdicaoArquivo(file_path)
+        from interfaces.CLASSES_TELAS.classe_tela_edicao_arquivo import TelaEdicaoArquivo
+        tela_edicao_arquivo = TelaEdicaoArquivo(file_path)
         tela_edicao_arquivo.run()
 
     def ir_tela_pesquisar(self):
         # Destrói a tela inicial
         self.destroy()
         # Cria uma nova instância da tela de pesquisa e execute
-        tela_pesquisa = classe_tela_pesquisa.TelaPesquisa()
+        from interfaces.CLASSES_TELAS.classe_tela_pesquisa import TelaPesquisa
+        tela_pesquisa = TelaPesquisa()
         tela_pesquisa.run()
 
     def ir_tela_meus_arquivos(self):
-        # Destrói a tela inicial
+        # Destrua a tela inicial
         self.destroy()
-        # Cria uma nova instância da tela de meus arquivos e execute
-        tela_meus_arquivos = classe_tela_meus_arquivos.TelaMeusArquivos()
+        # Crie uma nova instância da tela de meus arquivos e execute
+        from interfaces.CLASSES_TELAS.classe_tela_meus_arquivos import TelaMeusArquivos
+        tela_meus_arquivos = TelaMeusArquivos(self.repository)  # Forneça o objeto repository
         tela_meus_arquivos.run()
 
     def logout(self):

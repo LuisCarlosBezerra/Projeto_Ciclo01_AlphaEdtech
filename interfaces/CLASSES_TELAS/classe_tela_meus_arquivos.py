@@ -1,17 +1,18 @@
 from tkinter import Tk, Canvas, Button, PhotoImage, Frame, ttk, messagebox
 from pathlib import Path
-import classe_tela_pesquisa
-import classe_tela_inicial
 import os
 from PIL import Image
 from pathlib import Path
-from io import BytesIO
+from db.repository import Repository
+from user_DB import DB_NAME, USER, PASSWORD
 
 class TelaMeusArquivos(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.layout_config()
         self.appearence()
+        self.repository = Repository(DB_NAME, USER, PASSWORD)
+        self.adicionar_valores(self.repository)
 
     def layout_config(self):
         self.title('OCRCreditBank')
@@ -229,27 +230,46 @@ class TelaMeusArquivos(Tk):
         self.treeview.config(xscrollcommand=xscroll.set, yscrollcommand=yscroll.set)
 
         # Lidando com o duplo clique na treeview
-        self.treeview.bind("<Double-1>", self.abrir_imagem)
+        self.treeview.bind("<Double-1>", self.mostrar_imagem)
 
-    def abrir_imagem(self, event):
-        pass
-        #Possível implementação para esta função
-        '''
+    def adicionar_valores(self, repository):
+        documents = repository.get_documents_by_order(self)
+        
+        for document in documents:
+            self.treeview.insert(
+                "",
+                "end",
+                values=(
+                    document.id,
+                    document.agent_name,
+                    document.physical_location,
+                    document.contract_date,
+                    document.credit_value,
+                    document.certificate_number,
+                    document.client.name,
+                    document.client.cpf,
+                    document.client.agency,
+                    document.client.account,
+                    document.client.address,
+                    document.client.birth_date,
+                    document.image.id,
+
+                ),
+            )
+
+    def mostrar_imagem(self, event):
         item = self.treeview.selection()
         if item:
             # Obtém o nome do arquivo do item selecionado
             filename = self.treeview.item(item, "values")[0]
-            image_data = self.db.fetch_image(filename)
-            if image_data:
+            if filename:
                 try:
-                    # Converte os dados binários da imagem de volta para uma imagem
-                    img = Image.open(BytesIO(image_data))
-                    img.show()
+                    document = self.__repository.document_id(int(filename))
+                    document.image.show_image()
                 except Exception as e:
-                    messagebox.showerror("Erro", f"Erro ao abrir imagem: {e}")
+                    messagebox.showerror(f"Erro ao abrir a imagem: {e}")
             else:
-                messagebox.showerror("Erro", f"Imagem correspondente ao arquivo '{filename}' não encontrada.")
-            '''
+                messagebox.showerror("Erro", "Nenhum documento selecionado.")
 
     def run(self):
         self.mainloop()
@@ -258,13 +278,15 @@ class TelaMeusArquivos(Tk):
         # Destrua a tela inicial
         self.destroy()
         # Crie uma nova instância da tela de pesquisa e execute
-        tela_pesquisa = classe_tela_pesquisa.TelaPesquisa()
+        from interfaces.CLASSES_TELAS.classe_tela_pesquisa import TelaPesquisa
+        tela_pesquisa = TelaPesquisa()
         tela_pesquisa.run()
 
     def ir_para_inicial(self):
         # Destrua a tela de pesquisa
         self.destroy()
         # Crie uma nova instância da tela inicial e execute
-        tela_inicial = classe_tela_inicial.TelaInicial()
-        tela_inicial.run()
+        from interfaces.CLASSES_TELAS.classe_tela_inicial import TelaInicial
+        chamar_tela_inicial = TelaInicial()
+        chamar_tela_inicial.run()
         

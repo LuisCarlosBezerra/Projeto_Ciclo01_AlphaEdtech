@@ -1,9 +1,6 @@
 from pathlib import Path
 import os
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage
-import classe_tela_cadastro
-import classe_tela_inicial
-
 
 class TelaLogin(Tk):
     def __init__(self, *args, **kwargs):
@@ -196,15 +193,16 @@ class TelaLogin(Tk):
         # Destrua a tela de login
         self.destroy()
         # Crie uma nova instância da tela de cadastro e execute
-        tela_cadastro = classe_tela_cadastro.TelaCadastro()
-        tela_cadastro.run()
+        ##tela_cadastro = classe_tela_cadastro.TelaCadastro()
+        #tela_cadastro.run()
 
     def ir_para_inicial(self):
         # Destrua a tela de login
         self.destroy()
         # Crie uma nova instância da tela inicial e execute
-        tela_inicial = classe_tela_inicial.TelaInicial()
-        tela_inicial.run()
+        from interfaces.CLASSES_TELAS.classe_tela_inicial import TelaInicial
+        chamar_tela_inicial = TelaInicial()
+        chamar_tela_inicial.run()
 
     def run(self):
         self.mainloop()

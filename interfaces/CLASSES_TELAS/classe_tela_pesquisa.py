@@ -1,7 +1,5 @@
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, Frame, ttk
 from pathlib import Path
-import classe_tela_inicial
-import classe_tela_meus_arquivos
 import os
 
 
@@ -270,12 +268,14 @@ class TelaPesquisa(Tk):
         # Destrua a tela de pesquisa
         self.destroy()
         # Crie uma nova instância da tela inicial e execute
-        tela_inicial = classe_tela_inicial.TelaInicial()
+        from interfaces.CLASSES_TELAS.classe_tela_inicial import TelaInicial
+        tela_inicial = TelaInicial()
         tela_inicial.run()
 
     def ir_tela_meus_arquivos(self):
         # Destrua a tela de pesquisa
         self.destroy()
         # Crie uma nova instância da tela de meus arquivos e execute
-        tela_meus_arquivos = classe_tela_meus_arquivos.TelaMeusArquivos()
+        from interfaces.CLASSES_TELAS.classe_tela_meus_arquivos import TelaMeusArquivos
+        tela_meus_arquivos = TelaMeusArquivos()
         tela_meus_arquivos.run()

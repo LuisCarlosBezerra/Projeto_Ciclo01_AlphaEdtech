@@ -1,9 +1,7 @@
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, Label
 from pathlib import Path
-import classe_tela_inicial
 from PIL import Image, ImageTk
 import os
-
 
 class TelaEdicaoArquivo(Tk):
     def __init__(self, file_path, *args, **kwargs):
@@ -223,5 +221,6 @@ class TelaEdicaoArquivo(Tk):
         # Destrua a tela de login
         self.destroy()
         # Crie uma nova instância da tela inicial e execute
-        tela_inicial = classe_tela_inicial.TelaInicial()
+        from interfaces.CLASSES_TELAS.classe_tela_inicial import TelaInicial
+        tela_inicial = TelaInicial()
         tela_inicial.run()
