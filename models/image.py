@@ -80,7 +80,7 @@ class ImageClass:
         """
         select_query = """
         SELECT id_imagem, nome_imagem, imagem FROM imagens
-        WHERE imagens.id_imagem = %s;
+        WHERE imagem.id_imagem = %s;
         """
         data = db.fetch_data(select_query, image_id)
         if data:
@@ -102,8 +102,8 @@ class ImageClass:
 
         """
         if self.image_data is not None:
-            plt.imshow(self.image_data)
-            plt.show()
+
+            self.image_data.show()
             print("INFO: Imagem mostrada com sucesso!")
         else:
             print("INFO: Imagem mostrada sem sucesso!")

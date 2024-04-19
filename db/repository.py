@@ -118,6 +118,9 @@ class Repository:
             asc=asc,
         )
 
+    def get_document_id(self, document_id):
+        return DigitalDocument.from_database(self.db, document_id=document_id)
+
     def __del__(self) -> None:
         """
         Closes the database connection when the Repository object is deleted.
