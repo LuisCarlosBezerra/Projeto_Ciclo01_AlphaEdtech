@@ -252,8 +252,8 @@ class TelaCadastro(Tk):
         # Destrua a tela de cadastro
         self.destroy()
         # Crie uma nova instância da tela de login e execute
-        tela_login = classe_tela_login.TelaLogin()
-        tela_login.run()
+        #tela_login = classe_tela_login.TelaLogin()
+        #tela_login.run()
 
     def run(self):
         self.mainloop()
