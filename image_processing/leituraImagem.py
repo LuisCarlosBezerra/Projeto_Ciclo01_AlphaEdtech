@@ -8,7 +8,7 @@ import cv2
 
 config_tesseract = '--tessdata-dir tessdata'
 
-img = cv2.imread('/home/souzaigor499/Desafio/Projeto_Ciclo01_AlphaEdtech/images/CEDULA DE CREDITO EDITAVEL_page-0001.jpg', 0) # passar o caminho da imagem já precessada
+img = cv2.imread('/home/souzaigor499/Desafio/Projeto_Ciclo01_AlphaEdtech/images/imgPrint/doc1.png', 0) # passar o caminho da imagem já precessada
 
 
 
