@@ -1,4 +1,4 @@
-import psycopg2
+''' import psycopg2
 from Hash_gen import encrypt_password, check_password
 from user_DB import DB_NAME, USER, PASSWORD, HOST, PORT
 from CRUD_db import inserir_dados_usuario
@@ -49,5 +49,31 @@ with conexao.cursor() as cursor:
 
 
 #input('Digite a sua senha: ')
+
+
+'''
+from models.user import User
+from db.connection import DatabaseConnection
+from models.image import ImageClass
+from PIL import Image
+from models.client import Client
+from models.digital_document import DigitalDocument
+
+#objeto conexão
+banco_conect = DatabaseConnection("postgres","Siulsolrac32","provaPython","localhost",5432)
+#objeto usuário
+usuario = User('Luis Carlos Bezerra', '001.001.002-00', 'SOLRAC', '123456')
+#usuario.save_to_database(banco_conect)
+#objeto imagem
+imagem = ImageClass('documento 02', image_path='images\print_livro.png')
+#imagem.save_to_database(banco_conect)
+#imagem.show_image()
+#criando um objeto cliente
+cliente = Client('Sebastiao Nunes Maia', '985.900.001-34', '33545', '87921-2', 'Rua Candido Nunes, bairro Juremal','25/12/1988')
+#cliente.save_to_database(banco_conect)
+#criando um objeto documento
+documento = DigitalDocument('Carlos do Nascimento Filho', 'AR25GA06', '30/12/2022', 3854.85, '58-21456-12', imagem, cliente)
+documento.save_to_database(banco_conect)
+
 
 

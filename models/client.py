@@ -73,7 +73,10 @@ class Client:
             self.address,
             self.birth_date,
         )
-        self.id = db.cur.fetchone()[0]
+        try:
+            self.id = db.cur.fetchone()[0]
+        except Exception as error:
+            print(f'Dados não salvos no banco. Chaves únicas já existem no banco. Erro: {error}')
 
     @staticmethod
     def from_database(db, client_id):

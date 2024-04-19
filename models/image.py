@@ -56,7 +56,7 @@ class ImageClass:
             db (DatabaseConnection): The database connection object.
         """
         insert_query = """
-        INSERT INTO imagens (nome_imagem, imagem) VALUES (%s, %s) RETURNING id_imagem;
+        INSERT INTO imagem (nome_imagem, imagem) VALUES (%s, %s) RETURNING id_imagem;
         """
         img_file = open(self.image_path, "rb")
         img = img_file.read()
