@@ -38,6 +38,11 @@ class TelaPesquisa(Tk):
         )
         self.relative_to_assets = lambda path: self.assets_path / Path(path)
 
+        # Criar ícone da aplicação para janela
+        icon_path = self.relative_to_assets("logo.ico")
+        if os.path.exists(icon_path):
+            self.iconbitmap(icon_path)
+
         self.canvas.create_rectangle(0.0, 0.0, 1030.0, 85.0, fill="#2E5266", outline="")
 
         self.canvas.create_rectangle(
@@ -219,7 +224,7 @@ class TelaPesquisa(Tk):
             842.0,
             289.0,
             anchor="nw",
-            text="VALORES(R$)",
+            text="VALORES (R$)",
             fill="#000000",
             font=("Poppins Light", 13 * -1),
         )
@@ -228,7 +233,7 @@ class TelaPesquisa(Tk):
             817.0,
             353.0,
             anchor="nw",
-            text="DATA (DD/MM/AAAA)",
+            text="DATAS (DD/MM/AAAA)",
             fill="#000000",
             font=("Poppins Light", 13 * -1),
         )
@@ -236,12 +241,13 @@ class TelaPesquisa(Tk):
         self.treeview_frame=Frame(self, bd=1, relief="solid", bg="#D9D9D9")
         self.treeview_frame.place(x=205, y=85, width=537, height=435)
         # Adicionando o TreeView ao LabelFrame
-        self.treeview = ttk.Treeview(self.treeview_frame, columns=('Nº Cédula', 'Agente', 'Titular', 'Valor','Data'), show='headings')
+        self.treeview = ttk.Treeview(self.treeview_frame, columns=('Nº Cédula', 'Agente', 'Titular', 'Valor','Data','Local Físico'), show='headings')
         self.treeview.heading('Nº Cédula', text='Número da Cédula')
         self.treeview.heading('Agente', text='Agente')
         self.treeview.heading('Titular', text='Titular')
         self.treeview.heading('Valor', text='Valor')
-        self.treeview.heading('Data', text='Data de Modificação')
+        self.treeview.heading('Data', text='Data do Contrato')
+        self.treeview.heading('Local Físico', text='Local Físico Armaz.')
         self.treeview.pack(fill="both", expand=True)  # Preenche todo o espaço disponível
 
         xscroll = ttk.Scrollbar(self.treeview, orient="horizontal")

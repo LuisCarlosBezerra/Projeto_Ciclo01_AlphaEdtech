@@ -39,6 +39,11 @@ class TelaInicial(Tk):
         )
         self.relative_to_assets = lambda path: self.assets_path / Path(path)
 
+        # Criar ícone da aplicação para janela
+        icon_path = self.relative_to_assets("logo.ico")
+        if os.path.exists(icon_path):
+            self.iconbitmap(icon_path)
+
         self.canvas.create_rectangle(0.0, 0.0, 1030.0, 85.0, fill="#2E5266", outline="")
 
         self.canvas.create_rectangle(
@@ -108,6 +113,17 @@ class TelaInicial(Tk):
         )
         self.button_4.place(x=17.0, y=176.0, width=162.0, height=24.0)
 
+        self.button_image_5 = PhotoImage(file=str(self.assets_path / "button_5.png"))
+        self.button_5 = Button(
+            image = self.button_image_5,
+            borderwidth=0,
+            highlightthickness=0,
+            command=self.logout,
+            relief="flat",
+            bg=self.cget("bg")
+        )
+        self.button_5.place(x=47.0, y=244.0, width=110.0, height=35)
+
         self.canvas.create_text(
             300.0,
             172.0,
@@ -156,3 +172,7 @@ class TelaInicial(Tk):
         # Cria uma nova instância da tela de meus arquivos e execute
         tela_meus_arquivos = classe_tela_meus_arquivos.TelaMeusArquivos()
         tela_meus_arquivos.run()
+
+    def logout(self):
+        # Destrói a tela inicial e fecha o programa
+        self.destroy()

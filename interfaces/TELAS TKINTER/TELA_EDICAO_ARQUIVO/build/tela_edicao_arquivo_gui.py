@@ -4,19 +4,19 @@
 
 
 from pathlib import Path
+import os
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\david\Desktop\TI\EDTECH\DESAFIO_CICLO1\TKDESIGNER\NOVA_VERSÃO\TELA_EDÇÃO_ARQUIVO\build\assets\frame0")
-
-
-def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
-
+# Auto path para mídias da tela
+output_path = os.path.abspath(os.path.dirname(__file__))
+assets_path = (
+            Path(output_path) / f"assets\\frame0"
+        )
+relative_to_assets = lambda path: assets_path / Path(path)
 
 window = Tk()
 
