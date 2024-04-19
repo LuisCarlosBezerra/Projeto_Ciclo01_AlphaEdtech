@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-def image_align(padrao_path, imagem_path):
+def image_align(imagem_path, padrao_path='C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/images/imgPrint/doc1.png'):
     img1_color = cv2.imread(imagem_path)  
     img2_color = cv2.imread(padrao_path)    
     img1 = cv2.cvtColor(img1_color, cv2.COLOR_BGR2GRAY) 
@@ -27,5 +27,12 @@ def image_align(padrao_path, imagem_path):
     homography, mask = cv2.findHomography(p1, p2, cv2.RANSAC) 
     transformed_img = cv2.warpPerspective(img1_color, 
                         homography, (width, height)) 
-    save_path = 'C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/outputs_tests_images/output.png'
+    save_path = './outputs_tests_images/output.png'
     cv2.imwrite(save_path, transformed_img)
+    return save_path
+
+
+if __name__ == "__main__":
+    #padrao = 'images/imgPrint/doc1.png'
+    imagem = 'images/imgPrint/anomalia_4.png'
+    image_align(imagem)

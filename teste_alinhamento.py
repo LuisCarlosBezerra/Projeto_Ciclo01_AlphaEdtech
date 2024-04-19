@@ -2,16 +2,18 @@ import cv2
 import numpy as np 
 
 #PATH DAS IMAGENS
-padrao = 'C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/images/imgPrint/doc1.png'
+padrao = 'C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/images/ImagensEscaneada/doc002.jpg'
 path_d90 = 'C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/images/imgPrint/anomalia_1.png'
 path_e90 = 'C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/images/imgPrint/anomalia_2.png'
-path_180 = 'C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/images/imgPrint/anomalia_3.png'
-path_torto = 'C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/images/imgPrint/anomalia_4.png'
+path_180 = 'C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/images/ImagensEscaneada/doc001.jpg'
+path_torto = 'C:/Users/luis_/OneDrive/Documentos/Projeto_Ciclo01_Alpha/images/ImagensEscaneada/doc006.jpg'
+
 
 lista_anomalias = [path_d90,
                    path_e90,
                    path_180,
                    path_torto]
+
 
 for index, anomalia in enumerate(lista_anomalias):
     
