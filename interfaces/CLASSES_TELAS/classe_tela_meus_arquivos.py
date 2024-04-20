@@ -7,11 +7,11 @@ from db.repository import Repository
 from user_DB import DB_NAME, USER, PASSWORD
 
 class TelaMeusArquivos(Tk):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, repository: Repository, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.layout_config()
         self.appearence()
-        self.repository = Repository(DB_NAME, USER, PASSWORD)
+        self.repository = repository
         self.adicionar_valores(self.repository)
 
     def layout_config(self):
@@ -207,13 +207,18 @@ class TelaMeusArquivos(Tk):
         self.treeview_frame=Frame(self, bd=1, relief="solid", bg="#D9D9D9")
         self.treeview_frame.place(x=205, y=85, width=537, height=435)
         # Adicionando o TreeView ao LabelFrame
-        self.treeview = ttk.Treeview(self.treeview_frame, columns=('Nº Cédula', 'Agente', 'Titular', 'Valor','Data', 'Local Físico'), show='headings')
-        self.treeview.heading('Nº Cédula', text='Número da Cédula')
-        self.treeview.heading('Agente', text='Agente')
+        self.treeview = ttk.Treeview(
+            self.treeview_frame,
+            columns=("ID", "Titular", "Agente", "Local Físico", "Data", "Valor", "Nº Cédula"),
+            show="headings",
+        )
+        self.treeview.heading('ID', text='ID')
         self.treeview.heading('Titular', text='Titular')
-        self.treeview.heading('Valor', text='Valor')
-        self.treeview.heading('Data', text='Data do Contrato')
+        self.treeview.heading('Agente', text='Agente')
         self.treeview.heading('Local Físico', text='Local Físico Armaz.')
+        self.treeview.heading('Data', text='Data do Contrato')
+        self.treeview.heading('Valor', text='Valor')
+        self.treeview.heading('Nº Cédula', text='Número da Cédula')
         self.treeview.pack(fill="both", expand=True)  # Preenche todo o espaço disponível
 
         xscroll = ttk.Scrollbar(self.treeview, orient="horizontal")
@@ -250,18 +255,18 @@ class TelaMeusArquivos(Tk):
                     "end",
                     values=(
                         document.id,
+                        document.client.name,
                         document.agent_name,
                         document.physical_location,
                         document.contract_date,
                         document.credit_value,
                         document.certificate_number,
-                        document.client.name,
-                        document.client.cpf,
-                        document.client.agency,
-                        document.client.account,
-                        document.client.address,
-                        document.client.birth_date,
-                        document.image.id,
+                        # document.client.cpf,
+                        # document.client.agency,
+                        # document.client.account,
+                        # document.client.address,
+                        # document.client.birth_date,
+                        # document.image.id,
 
                     ),
                 )
@@ -276,7 +281,7 @@ class TelaMeusArquivos(Tk):
                     document = self.repository.get_document_id(int(filename))
                     document.image.show_image()
                 except Exception as e:
-                    messagebox.showerror(f"Erro ao abrir a imagem: {e}")
+                    messagebox.showerror("Erro",f"Erro ao abrir a imagem: {e}")
             else:
                 messagebox.showerror("Erro", "Nenhum documento selecionado.")
 
@@ -288,7 +293,7 @@ class TelaMeusArquivos(Tk):
         self.destroy()
         # Crie uma nova instância da tela de pesquisa e execute
         from interfaces.CLASSES_TELAS.classe_tela_pesquisa import TelaPesquisa
-        tela_pesquisa = TelaPesquisa()
+        tela_pesquisa = TelaPesquisa(self.repository)
         tela_pesquisa.run()
 
     def ir_para_inicial(self):
@@ -296,6 +301,5 @@ class TelaMeusArquivos(Tk):
         self.destroy()
         # Crie uma nova instância da tela inicial e execute
         from interfaces.CLASSES_TELAS.classe_tela_inicial import TelaInicial
-        chamar_tela_inicial = TelaInicial()
+        chamar_tela_inicial = TelaInicial(self.repository)
         chamar_tela_inicial.run()
-        

@@ -3,6 +3,7 @@ from models.application import Application
 from models.application import DigitalDocument
 from models.user import User
 from models.auth import PasswordManager
+from datetime import datetime
 
 
 class Repository:
@@ -32,14 +33,19 @@ class Repository:
         )
         self.user = None
 
-    def save_applicacation(self, app):
+    def save_applicacation(self, document):
         """
         Saves an application to the database.
 
         Args:
             app (Application): The application object to be saved to the database.
         """
-        app.save_to_database(self.db)
+        if self.user:
+            app = Application(
+                "Salvando Novo Documento", datetime.now(), self.user, document
+            )
+            app.save_to_database(self.db)
+            print("INFO: Novo documento Salvo com sucesso!")
 
     def get_application(self, app_id):
         """
@@ -92,6 +98,19 @@ class Repository:
             list[DigitalDocument] or None: A list of DigitalDocument instances retrieved from the database
                 based on the provided criteria. Returns None if no matching documents are found.
         """
+        if ct_date_init == "":
+            ct_date_init = None
+        if ct_date_last == "":
+            ct_date_last = None
+        if cl_name == "":
+            cl_name = None
+        if ag_name == "":
+            ag_name = None
+        if cr_value_init == "":
+            cr_value_init = None
+        if cr_value_last == "":
+            cr_value_last = None
+
         return DigitalDocument.from_db_by_choice(
             self.db,
             ct_date_init=ct_date_init,

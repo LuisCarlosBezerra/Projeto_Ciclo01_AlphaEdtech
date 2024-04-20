@@ -333,18 +333,19 @@ class DigitalDocument:
         LEFT JOIN cliente ci ON d.id_cliente = ci.id_cliente
         LEFT JOIN imagem i ON d.id_imagem = i.id_imagem
         WHERE"""
+        print(len(select_query))
         if ag_name:
             values = values + (f"%{ag_name}%",)
             select_query += " LOWER(d.nome_agente) LIKE LOWER(%s)"
         if cr_value_init:
             values = values + (cr_value_init, cr_value_last)
-            if len(select_query) == 409:
+            if len(select_query) == 408:
                 select_query += " d.valor_credito BETWEEN %s AND %s"
             else:
                 select_query += " AND d.valor_credito BETWEEN %s AND %s"
         if ct_date_init:
             values = values + (ct_date_init, ct_date_last)
-            if len(select_query) == 409:
+            if len(select_query) == 408:
                 select_query += " d.data_contrato BETWEEN %s AND %s"
             else:
                 select_query += " AND d.data_contrato BETWEEN %s AND %s"
@@ -463,6 +464,7 @@ class DigitalDocument:
         LEFT JOIN cliente ci ON d.id_cliente = ci.id_cliente
         LEFT JOIN imagem i ON d.id_imagem = i.id_imagem
         """
+
         if ag_name == True or c_number == True or cont_date == True or cr_value == True:
             cl_name = False
 

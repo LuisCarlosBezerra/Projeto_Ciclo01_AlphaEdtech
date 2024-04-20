@@ -3,15 +3,17 @@ from pathlib import Path
 import os
 from db.repository import Repository
 from user_DB import DB_NAME, USER, PASSWORD
+
+
 class TelaInicial(Tk):
-    def __init__(self, username, *args, **kwargs):
+    def __init__(self, repository: Repository, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.layout_config()
-        self.appearence(username)
-        self.repository = Repository(DB_NAME, USER, PASSWORD)
-        
+        self.appearence(repository.user.user_name)
+        self.repository = repository
+
     def layout_config(self):
-        self.title('OCRCreditBank')
+        self.title("OCRCreditBank")
         self.geometry("1030x520")
         self.configure(bg="#FFFFFF")
         self.resizable(False, False)
@@ -55,8 +57,8 @@ class TelaInicial(Tk):
             highlightthickness=0,
             command=self.select_image,
             relief="flat",
-            bg='#D3D0CB',
-            activebackground='#D3D0CB'
+            bg="#D3D0CB",
+            activebackground="#D3D0CB",
         )
         self.button_1.place(x=840.0, y=244.0, width=100.0, height=100.0)
 
@@ -85,7 +87,7 @@ class TelaInicial(Tk):
             highlightthickness=0,
             command=lambda: print("button_2 clicked"),
             relief="flat",
-            bg=self.cget('bg')
+            bg=self.cget("bg"),
         )
         self.button_2.place(x=17.0, y=100.0, width=155.0, height=24.0)
 
@@ -96,7 +98,7 @@ class TelaInicial(Tk):
             highlightthickness=0,
             command=self.ir_tela_pesquisar,
             relief="flat",
-            bg=self.cget('bg')
+            bg=self.cget("bg"),
         )
         self.button_3.place(x=17.0, y=138.0, width=124.0, height=24.0)
 
@@ -107,18 +109,18 @@ class TelaInicial(Tk):
             highlightthickness=0,
             command=self.ir_tela_meus_arquivos,
             relief="flat",
-            bg=self.cget('bg')
+            bg=self.cget("bg"),
         )
         self.button_4.place(x=17.0, y=176.0, width=162.0, height=24.0)
 
         self.button_image_5 = PhotoImage(file=str(self.assets_path / "button_5.png"))
         self.button_5 = Button(
-            image = self.button_image_5,
+            image=self.button_image_5,
             borderwidth=0,
             highlightthickness=0,
             command=self.logout,
             relief="flat",
-            bg=self.cget("bg")
+            bg=self.cget("bg"),
         )
         self.button_5.place(x=47.0, y=244.0, width=110.0, height=35)
 
@@ -152,20 +154,25 @@ class TelaInicial(Tk):
 
     def ir_tela_edicao_arquivo(self, file_path):
         self.destroy()
-        from interfaces.CLASSES_TELAS.classe_tela_edicao_arquivo import TelaEdicaoArquivo
-        tela_edicao_arquivo = TelaEdicaoArquivo(file_path)
+        from interfaces.CLASSES_TELAS.classe_tela_edicao_arquivo import (
+            TelaEdicaoArquivo,
+        )
+
+        tela_edicao_arquivo = TelaEdicaoArquivo(file_path, self.repository)
         tela_edicao_arquivo.run()
 
     def ir_tela_pesquisar(self):
         self.destroy()
         from interfaces.CLASSES_TELAS.classe_tela_pesquisa import TelaPesquisa
-        tela_pesquisa = TelaPesquisa()
+
+        tela_pesquisa = TelaPesquisa(self.repository)
         tela_pesquisa.run()
 
     def ir_tela_meus_arquivos(self):
         self.destroy()
         from interfaces.CLASSES_TELAS.classe_tela_meus_arquivos import TelaMeusArquivos
-        tela_meus_arquivos = TelaMeusArquivos() 
+
+        tela_meus_arquivos = TelaMeusArquivos(self.repository)
         tela_meus_arquivos.run()
 
     def logout(self):
