@@ -159,39 +159,39 @@ class TelaPesquisa(Tk):
 
         self.entry_image_4 = PhotoImage(file=str(self.assets_path / "entry_4.png"))
         self.entry_bg_4 = self.canvas.create_image(
-            822.5, 330.0, image=self.entry_image_4
+            816.0, 331.0, image=self.entry_image_4
         )
         self.entry_4 = Entry(
             self.canvas, bd=0, bg="#FEFEFE", fg="#000716", highlightthickness=0
         )
-        self.entry_4.place(x=798.0, y=314.0, width=49.0, height=30.0)
+        self.entry_4.place(x=778.0, y=315.0, width=76.0, height=30.0)
 
         self.entry_image_5 = PhotoImage(file=str(self.assets_path / "entry_5.png"))
         self.entry_bg_5 = self.canvas.create_image(
-            822.5, 399.0, image=self.entry_image_5
+            816.0, 399.0, image=self.entry_image_5
         )
         self.entry_5 = Entry(
             self.canvas, bd=0, bg="#FEFEFE", fg="#000716", highlightthickness=0
         )
-        self.entry_5.place(x=798.0, y=383.0, width=49.0, height=30.0)
+        self.entry_5.place(x=778.0, y=383.0, width=76.0, height=30.0)
 
         self.entry_image_6 = PhotoImage(file=str(self.assets_path / "entry_6.png"))
         self.entry_bg_6 = self.canvas.create_image(
-            932.5, 330.0, image=self.entry_image_6
+            931.0, 331.0, image=self.entry_image_6
         )
         self.entry_6 = Entry(
             self.canvas, bd=0, bg="#FEFEFE", fg="#000716", highlightthickness=0
         )
-        self.entry_6.place(x=908.0, y=314.0, width=49.0, height=30.0)
+        self.entry_6.place(x=893.0, y=315.0, width=76.0, height=30.0)
 
         self.entry_image_7 = PhotoImage(file=str(self.assets_path / "entry_7.png"))
         self.entry_bg_7 = self.canvas.create_image(
-            932.5, 399.0, image=self.entry_image_7
+            931.0, 399.0, image=self.entry_image_7
         )
         self.entry_7 = Entry(
             self.canvas, bd=0, bg="#FEFEFE", fg="#000716", highlightthickness=0
         )
-        self.entry_7.place(x=908.0, y=383.0, width=49.0, height=30.0)
+        self.entry_7.place(x=893.0, y=383.0, width=76.0, height=30.0)
 
         self.canvas.create_text(
             772.0,
@@ -247,20 +247,27 @@ class TelaPesquisa(Tk):
                 "ID",
                 "Titular",
                 "Agente",
-                "Local Físico",
-                "Data",
+                "Local Físico Armaz.",
+                "Data do Contrato",
                 "Valor",
                 "Nº Cédula",
             ),
             show="headings",
         )
-        self.treeview.heading("ID", text="ID")
-        self.treeview.heading("Titular", text="Titular")
-        self.treeview.heading("Agente", text="Agente")
-        self.treeview.heading("Local Físico", text="Local Físico Armaz.")
-        self.treeview.heading("Data", text="Data do Contrato")
-        self.treeview.heading("Valor", text="Valor")
-        self.treeview.heading("Nº Cédula", text="Número da Cédula")
+
+        # self.treeview.heading("ID", text="ID")
+        # self.treeview.heading("Titular", text="Titular")
+        # self.treeview.heading("Agente", text="Agente")
+        # self.treeview.heading("Local Físico", text="Local Físico Armaz.")
+        # self.treeview.heading("Data", text="Data do Contrato")
+        # self.treeview.heading("Valor", text="Valor")
+        # self.treeview.heading("Nº Cédula", text="Número da Cédula")
+
+        # Definindo as âncoras das colunas como centralizadas e ajustando a largura automaticamente
+        for coluna in self.treeview["columns"]:
+            self.treeview.heading(coluna, text=coluna, anchor="center")
+            self.treeview.column(coluna, anchor="center", width=100,  stretch=True)  # Largura inicial 100, mas que se adapta aos valores fornecidos
+        
         self.treeview.pack(
             fill="both", expand=True
         )  # Preenche todo o espaço disponível

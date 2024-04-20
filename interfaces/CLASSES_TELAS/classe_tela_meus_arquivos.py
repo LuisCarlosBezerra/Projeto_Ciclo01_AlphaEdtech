@@ -209,17 +209,23 @@ class TelaMeusArquivos(Tk):
         # Adicionando o TreeView ao LabelFrame
         self.treeview = ttk.Treeview(
             self.treeview_frame,
-            columns=("ID", "Titular", "Agente", "Local Físico", "Data", "Valor", "Nº Cédula"),
+            columns=("ID", "Titular", "Agente", "Local Físico Armaz.", "Data do Contrato", "Valor", "Nº Cédula"),
             show="headings",
         )
-        self.treeview.heading('ID', text='ID')
-        self.treeview.heading('Titular', text='Titular')
-        self.treeview.heading('Agente', text='Agente')
-        self.treeview.heading('Local Físico', text='Local Físico Armaz.')
-        self.treeview.heading('Data', text='Data do Contrato')
-        self.treeview.heading('Valor', text='Valor')
-        self.treeview.heading('Nº Cédula', text='Número da Cédula')
-        self.treeview.pack(fill="both", expand=True)  # Preenche todo o espaço disponível
+        
+        # self.treeview.heading('ID', text='ID')
+        # self.treeview.heading('Titular', text='Titular')
+        # self.treeview.heading('Agente', text='Agente')
+        # self.treeview.heading('Local Físico', text='Local Físico Armaz.')
+        # self.treeview.heading('Data', text='Data do Contrato')
+        # self.treeview.heading('Valor', text='Valor')
+        # self.treeview.heading('Nº Cédula', text='Número da Cédula')
+        # self.treeview.pack(fill="both", expand=True)  # Preenche todo o espaço disponível
+
+        # Definindo as âncoras das colunas como centralizadas e ajustando a largura automaticamente
+        for coluna in self.treeview["columns"]:
+            self.treeview.heading(coluna, text=coluna, anchor="center")
+            self.treeview.column(coluna, anchor="center", width=100,  stretch=True)  # Largura inicial 100, mas que se adapta aos valores fornecidos
 
         xscroll = ttk.Scrollbar(self.treeview, orient="horizontal")
         yscroll = ttk.Scrollbar(self.treeview, orient="vertical")
