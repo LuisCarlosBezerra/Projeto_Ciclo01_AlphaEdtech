@@ -1,6 +1,8 @@
 from db.connection import DatabaseConnection
 from models.application import Application
 from models.application import DigitalDocument
+from models.user import User
+from models.auth import PasswordManager
 
 
 class Repository:
@@ -28,6 +30,7 @@ class Repository:
         self.db = DatabaseConnection(
             dbname=dbname, user=user, password=password, host=host, port=port
         )
+        self.user = None
 
     def save_applicacation(self, app):
         """
@@ -120,6 +123,27 @@ class Repository:
 
     def get_document_id(self, document_id):
         return DigitalDocument.from_database(self.db, document_id=document_id)
+
+    def login(self, username, password):
+        user = User.from_db_by_username(self.db, username)
+        if user:
+            manager = PasswordManager()
+            if manager.check_password(
+                password=password,
+                hashed_password=user.password,
+            ):
+                print("Login Realizado com Sucesso!")
+                self.user = user
+                return True
+            else:
+                print("Usuário ou senha estão errados.")
+                return False
+        else:
+            print("Usuário ou senha estão errados.")
+            return False
+
+    def register(self, user):
+        user.save_to_database(self.db)
 
     def __del__(self) -> None:
         """

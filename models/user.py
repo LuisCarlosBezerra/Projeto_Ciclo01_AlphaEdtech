@@ -1,3 +1,6 @@
+from models.auth import PasswordManager
+
+
 class User:
     """
     Represents a user entity.
@@ -48,18 +51,22 @@ class User:
         INSERT INTO usuario (nome, cpf, user_name, senha) 
             VALUES (%s, %s, %s, %s) RETURNING id_usuario;
         """
+        manager = PasswordManager()
+        password_encript = manager.encrypt_password(self.password)
         db.execute_query(
             insert_query,
             "Salvando Usuario",
             self.name,
             self.cpf,
             self.user_name,
-            self.password,
+            password_encript,
         )
         try:
             self.id = db.cur.fetchone()[0]
         except Exception as error:
-            print(f'Dados não salvos no banco. Chaves únicas já existem no banco. Erro: {error}')
+            print(
+                f"Dados não salvos no banco. Chaves únicas já existem no banco. Erro: {error}"
+            )
 
     @staticmethod
     def from_database(db, client_id):
@@ -78,6 +85,42 @@ class User:
         WHERE usuario.id_usuario = %s;
         """
         data = db.fetch_data(select_query, client_id)
+        if data:
+            (
+                id,
+                name,
+                cpf,
+                user_name,
+                password,
+            ) = data[0]
+
+            return User(
+                id=id,
+                name=name,
+                cpf=cpf,
+                user_name=user_name,
+                password=password,
+            )
+        else:
+            return None
+
+    @staticmethod
+    def from_db_by_username(db, username):
+        """
+        Retrieves a User instance from the database based on the provided user ID.
+
+        Args:
+            db (DatabaseConnection): The database connection object.
+            client_id (int): The ID of the user to retrieve.
+
+        Returns:
+            User: The User instance retrieved from the database.
+        """
+        select_query = """
+        SELECT id_usuario, nome, cpf, user_name, senha FROM usuario
+        WHERE usuario.user_name = %s;
+        """
+        data = db.fetch_data(select_query, username)
         if data:
             (
                 id,

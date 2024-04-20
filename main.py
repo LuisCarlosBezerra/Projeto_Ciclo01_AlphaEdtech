@@ -4,7 +4,7 @@ from db.repository import Repository
 # from models.image import ImageClass
 from models.client import Client
 
-# from models.user import User
+from models.user import User
 
 from models.digital_document import DigitalDocument
 from models.application import Application
@@ -83,9 +83,12 @@ if __name__ == "__main__":
         # print(documentos[1])
 
         # TESTE ORDER BY
-        documentos = repository.get_documents_by_order()
-        for i in documentos:
-            print(i)
-
+        # documentos = repository.get_documents_by_order()
+        # for i in documentos:
+        #     print(i)
+        ruben = User("ruben", "12345983-99", "rubinf", "12345")
+        # repository.register(ruben)
+        print(repository.login("rubinf", "12345"))
+        print(repository.user)
     finally:
         pass
