@@ -6,16 +6,18 @@ from pathlib import Path
 from db.repository import Repository
 from user_DB import DB_NAME, USER, PASSWORD
 
+
 class TelaMeusArquivos(Tk):
     def __init__(self, repository: Repository, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.asc = True
         self.layout_config()
         self.appearence()
         self.repository = repository
-        self.adicionar_valores(self.repository)
+        self.adicionar_valores()
 
     def layout_config(self):
-        self.title('OCRCreditBank')
+        self.title("OCRCreditBank")
         self.geometry("1030x520")
         self.configure(bg="#FFFFFF")
         self.resizable(False, False)
@@ -73,7 +75,7 @@ class TelaMeusArquivos(Tk):
             highlightthickness=0,
             command=self.ir_para_inicial,
             relief="flat",
-            bg=self.cget('bg')
+            bg=self.cget("bg"),
         )
         self.button_1.place(x=17.0, y=100.0, width=155.0, height=24.0)
 
@@ -85,7 +87,7 @@ class TelaMeusArquivos(Tk):
             highlightthickness=0,
             command=self.ir_tela_pesquisar,
             relief="flat",
-            bg=self.cget('bg')
+            bg=self.cget("bg"),
         )
         self.button_2.place(x=17.0, y=138.0, width=124.0, height=24.0)
 
@@ -97,7 +99,7 @@ class TelaMeusArquivos(Tk):
             highlightthickness=0,
             command=lambda: print("button_3 clicked"),
             relief="flat",
-            bg=self.cget('bg')
+            bg=self.cget("bg"),
         )
         self.button_3.place(x=17.0, y=176.0, width=162.0, height=24.0)
 
@@ -119,10 +121,10 @@ class TelaMeusArquivos(Tk):
             image=self.button_image_4,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_4 clicked"),
+            command=self.ativa_asc,
             relief="flat",
-            bg='#D3D0CB',
-            activebackground='#D3D0CB'
+            bg="#D3D0CB",
+            activebackground="#D3D0CB",
         )
         self.button_4.place(x=945.0, y=102.0, width=24.0, height=24.0)
 
@@ -132,10 +134,10 @@ class TelaMeusArquivos(Tk):
             image=self.button_image_5,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_5 clicked"),
+            command=self.desativa_asc,
             relief="flat",
-            bg='#D3D0CB',
-            activebackground='#D3D0CB'
+            bg="#D3D0CB",
+            activebackground="#D3D0CB",
         )
         self.button_5.place(x=907.0, y=102.0, width=24.0, height=24.0)
 
@@ -145,10 +147,10 @@ class TelaMeusArquivos(Tk):
             image=self.button_image_6,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_6 clicked"),
+            command=self.adicionar_valores_numero_cedula,
             relief="flat",
-            bg='#D3D0CB',
-            activebackground='#D3D0CB'
+            bg="#D3D0CB",
+            activebackground="#D3D0CB",
         )
         self.button_6.place(x=773.0, y=162.0, width=93.0, height=29.0)
 
@@ -158,10 +160,10 @@ class TelaMeusArquivos(Tk):
             image=self.button_image_7,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_7 clicked"),
+            command=self.adicionar_valores_nome_agente,
             relief="flat",
-            bg='#D3D0CB',
-            activebackground='#D3D0CB'
+            bg="#D3D0CB",
+            activebackground="#D3D0CB",
         )
         self.button_7.place(x=898.0, y=162.0, width=93.0, height=29.0)
 
@@ -171,10 +173,10 @@ class TelaMeusArquivos(Tk):
             image=self.button_image_8,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_8 clicked"),
+            command=self.adicionar_valores_data_contrato,
             relief="flat",
-            bg='#D3D0CB',
-            activebackground='#D3D0CB'
+            bg="#D3D0CB",
+            activebackground="#D3D0CB",
         )
         self.button_8.place(x=838.0, y=260.0, width=93.0, height=29.0)
 
@@ -184,10 +186,10 @@ class TelaMeusArquivos(Tk):
             image=self.button_image_9,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_9 clicked"),
+            command=self.adicionar_valores_valor_credito,
             relief="flat",
-            bg='#D3D0CB',
-            activebackground='#D3D0CB'
+            bg="#D3D0CB",
+            activebackground="#D3D0CB",
         )
         self.button_9.place(x=897.0, y=209.0, width=93.0, height=29.0)
 
@@ -197,18 +199,19 @@ class TelaMeusArquivos(Tk):
             image=self.button_image_10,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_10 clicked"),
+            command=self.adicionar_valores,
             relief="flat",
-            bg='#D3D0CB',
-            activebackground='#D3D0CB'
+            bg="#D3D0CB",
+            activebackground="#D3D0CB",
         )
         self.button_10.place(x=773.0, y=208.0, width=93.0, height=29.0)
 
-        self.treeview_frame=Frame(self, bd=1, relief="solid", bg="#D9D9D9")
+        self.treeview_frame = Frame(self, bd=1, relief="solid", bg="#D9D9D9")
         self.treeview_frame.place(x=205, y=85, width=537, height=435)
         # Adicionando o TreeView ao LabelFrame
         self.treeview = ttk.Treeview(
             self.treeview_frame,
+        
             columns=("ID", "Titular", "Agente", "Local Físico Armaz.", "Data do Contrato", "Valor", "Nº Cédula"),
             show="headings",
         )
@@ -226,6 +229,29 @@ class TelaMeusArquivos(Tk):
         for coluna in self.treeview["columns"]:
             self.treeview.heading(coluna, text=coluna, anchor="center")
             self.treeview.column(coluna, anchor="center", width=100,  stretch=True)  # Largura inicial 100, mas que se adapta aos valores fornecidos
+=======
+            columns=(
+                "ID",
+                "Titular",
+                "Agente",
+                "Local Físico",
+                "Data",
+                "Valor",
+                "Nº Cédula",
+            ),
+            show="headings",
+        )
+        self.treeview.heading("ID", text="ID")
+        self.treeview.heading("Titular", text="Titular")
+        self.treeview.heading("Agente", text="Agente")
+        self.treeview.heading("Local Físico", text="Local Físico Armaz.")
+        self.treeview.heading("Data", text="Data do Contrato")
+        self.treeview.heading("Valor", text="Valor")
+        self.treeview.heading("Nº Cédula", text="Número da Cédula")
+        self.treeview.pack(
+            fill="both", expand=True
+        )  # Preenche todo o espaço disponível
+
 
         xscroll = ttk.Scrollbar(self.treeview, orient="horizontal")
         yscroll = ttk.Scrollbar(self.treeview, orient="vertical")
@@ -243,18 +269,20 @@ class TelaMeusArquivos(Tk):
         # Lidando com o duplo clique na treeview
         self.treeview.bind("<Double-1>", self.mostrar_imagem)
 
-    def adicionar_valores(self, repository):
-        documents = repository.get_documents_by_order(self)
-        '''
+    def adicionar_valores(self):
+        documents = self.repository.get_documents_by_order(asc=self.asc)
+        """
         Se o banco de dados estiver vazio, não será inserido nada na treeview, deixando-a vazia
-        '''
+        """
         if documents is None:
             pass
         else:
-            '''
+            print("dentro do cliente")
+            self.limpar_treeview()
+            """
         Se o banco de dados não estiver vazio, a treeview irá percorrer os documentos no repistório presentes na 
         instância do repostiorio e acionar a função get_documents_by_order e exibi-los através da treeview
-            '''
+            """
             for document in documents:
                 self.treeview.insert(
                     "",
@@ -267,13 +295,130 @@ class TelaMeusArquivos(Tk):
                         document.contract_date,
                         document.credit_value,
                         document.certificate_number,
-                        # document.client.cpf,
-                        # document.client.agency,
-                        # document.client.account,
-                        # document.client.address,
-                        # document.client.birth_date,
-                        # document.image.id,
+                    ),
+                )
 
+    def adicionar_valores_nome_agente(self):
+        documents = self.repository.get_documents_by_order(
+            ag_name=True, cl_name=False, asc=self.asc
+        )
+        """
+        Se o banco de dados estiver vazio, não será inserido nada na treeview, deixando-a vazia
+        """
+        if documents is None:
+            pass
+        else:
+            print("dentro do agente")
+            self.limpar_treeview()
+            """
+        Se o banco de dados não estiver vazio, a treeview irá percorrer os documentos no repistório presentes na 
+        instância do repostiorio e acionar a função get_documents_by_order e exibi-los através da treeview
+            """
+            for document in documents:
+                self.treeview.insert(
+                    "",
+                    "end",
+                    values=(
+                        document.id,
+                        document.client.name,
+                        document.agent_name,
+                        document.physical_location,
+                        document.contract_date,
+                        document.credit_value,
+                        document.certificate_number,
+                    ),
+                )
+
+    def adicionar_valores_data_contrato(self):
+        documents = self.repository.get_documents_by_order(
+            cont_date=True, cl_name=False, asc=self.asc
+        )
+        """
+        Se o banco de dados estiver vazio, não será inserido nada na treeview, deixando-a vazia
+        """
+        if documents is None:
+            pass
+        else:
+            print("dentro do agente")
+            self.limpar_treeview()
+            """
+        Se o banco de dados não estiver vazio, a treeview irá percorrer os documentos no repistório presentes na 
+        instância do repostiorio e acionar a função get_documents_by_order e exibi-los através da treeview
+            """
+            for document in documents:
+                self.treeview.insert(
+                    "",
+                    "end",
+                    values=(
+                        document.id,
+                        document.client.name,
+                        document.agent_name,
+                        document.physical_location,
+                        document.contract_date,
+                        document.credit_value,
+                        document.certificate_number,
+                    ),
+                )
+
+    def adicionar_valores_numero_cedula(self):
+        documents = self.repository.get_documents_by_order(
+            c_number=True, cl_name=False, asc=self.asc
+        )
+        """
+        Se o banco de dados estiver vazio, não será inserido nada na treeview, deixando-a vazia
+        """
+        if documents is None:
+            pass
+        else:
+            print("dentro do agente")
+            self.limpar_treeview()
+            """
+        Se o banco de dados não estiver vazio, a treeview irá percorrer os documentos no repistório presentes na 
+        instância do repostiorio e acionar a função get_documents_by_order e exibi-los através da treeview
+            """
+            for document in documents:
+                self.treeview.insert(
+                    "",
+                    "end",
+                    values=(
+                        document.id,
+                        document.client.name,
+                        document.agent_name,
+                        document.physical_location,
+                        document.contract_date,
+                        document.credit_value,
+                        document.certificate_number,
+                    ),
+                )
+
+    def adicionar_valores_valor_credito(self):
+        documents = self.repository.get_documents_by_order(
+            cr_value=True, cl_name=False, asc=self.asc
+        )
+        """
+        Se o banco de dados estiver vazio, não será inserido nada na treeview, deixando-a vazia
+        """
+        if documents is None:
+            pass
+        else:
+            print("dentro do valor")
+            self.limpar_treeview()
+            """
+        Se o banco de dados não estiver vazio, a treeview irá percorrer os documentos no repistório presentes na 
+        instância do repostiorio e acionar a função get_documents_by_order e exibi-los através da treeview
+            """
+            for document in documents:
+                self.treeview.insert(
+                    "",
+                    "end",
+                    values=(
+                        document.id,
+                        document.client.name,
+                        document.agent_name,
+                        document.physical_location,
+                        document.contract_date,
+                        document.credit_value,
+                        document.certificate_number,
                     ),
                 )
 
@@ -287,18 +432,25 @@ class TelaMeusArquivos(Tk):
                     document = self.repository.get_document_id(int(filename))
                     document.image.show_image()
                 except Exception as e:
-                    messagebox.showerror("Erro",f"Erro ao abrir a imagem: {e}")
+                    messagebox.showerror("Erro", f"Erro ao abrir a imagem: {e}")
             else:
                 messagebox.showerror("Erro", "Nenhum documento selecionado.")
 
     def run(self):
         self.mainloop()
 
+    def limpar_treeview(self):
+        items = self.treeview.get_children()
+        if len(items) != 0:
+            for item in items:
+                self.treeview.delete(item)
+
     def ir_tela_pesquisar(self):
         # Destrua a tela inicial
         self.destroy()
         # Crie uma nova instância da tela de pesquisa e execute
         from interfaces.CLASSES_TELAS.classe_tela_pesquisa import TelaPesquisa
+
         tela_pesquisa = TelaPesquisa(self.repository)
         tela_pesquisa.run()
 
@@ -307,5 +459,12 @@ class TelaMeusArquivos(Tk):
         self.destroy()
         # Crie uma nova instância da tela inicial e execute
         from interfaces.CLASSES_TELAS.classe_tela_inicial import TelaInicial
+
         chamar_tela_inicial = TelaInicial(self.repository)
         chamar_tela_inicial.run()
+
+    def ativa_asc(self):
+        self.asc = True
+
+    def desativa_asc(self):
+        self.asc = False
