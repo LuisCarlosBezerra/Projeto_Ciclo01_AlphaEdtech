@@ -234,28 +234,37 @@ class TelaMeusArquivos(Tk):
 
     def adicionar_valores(self, repository):
         documents = repository.get_documents_by_order(self)
-        
-        for document in documents:
-            self.treeview.insert(
-                "",
-                "end",
-                values=(
-                    document.id,
-                    document.agent_name,
-                    document.physical_location,
-                    document.contract_date,
-                    document.credit_value,
-                    document.certificate_number,
-                    document.client.name,
-                    document.client.cpf,
-                    document.client.agency,
-                    document.client.account,
-                    document.client.address,
-                    document.client.birth_date,
-                    document.image.id,
+        '''
+        Se o banco de dados estiver vazio, não será inserido nada na treeview, deixando-a vazia
+        '''
+        if documents is None:
+            pass
+        else:
+            '''
+        Se o banco de dados não estiver vazio, a treeview irá percorrer os documentos no repistório presentes na 
+        instância do repostiorio e acionar a função get_documents_by_order e exibi-los através da treeview
+            '''
+            for document in documents:
+                self.treeview.insert(
+                    "",
+                    "end",
+                    values=(
+                        document.id,
+                        document.agent_name,
+                        document.physical_location,
+                        document.contract_date,
+                        document.credit_value,
+                        document.certificate_number,
+                        document.client.name,
+                        document.client.cpf,
+                        document.client.agency,
+                        document.client.account,
+                        document.client.address,
+                        document.client.birth_date,
+                        document.image.id,
 
-                ),
-            )
+                    ),
+                )
 
     def mostrar_imagem(self, event):
         item = self.treeview.selection()
@@ -264,7 +273,7 @@ class TelaMeusArquivos(Tk):
             filename = self.treeview.item(item, "values")[0]
             if filename:
                 try:
-                    document = self.__repository.document_id(int(filename))
+                    document = self.repository.get_document_id(int(filename))
                     document.image.show_image()
                 except Exception as e:
                     messagebox.showerror(f"Erro ao abrir a imagem: {e}")

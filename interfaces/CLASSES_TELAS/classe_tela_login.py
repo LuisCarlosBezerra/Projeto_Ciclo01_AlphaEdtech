@@ -1,19 +1,56 @@
 from pathlib import Path
 import os
-from tkinter import Tk, Canvas, Entry, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Button, PhotoImage, messagebox
+from user_DB import DB_NAME, USER, PASSWORD
+from db.repository import Repository
+
+'''
+Arquivo classe_tela_login.py
+
+Este arquivo contém a definição da classe `TelaLogin`, responsável por criar e configurar a interface de login da 
+aplicação. Ele importa os módulos necessários, como `Path` e `os`, bem como diversas classes e funções específicas da 
+biblioteca Tkinter para a criação da interface gráfica.
+
+A classe `TelaLogin` é uma subclasse da classe `Tk` do Tkinter, o que permite que ela herde todas as funcionalidades e 
+métodos dessa classe para construir a janela de login.
+
+A interface é configurada com elementos visuais como botões, entradas de texto, imagens e textos, utilizando o Canvas 
+para organizá-los. Além disso, são realizadas operações para configurar a aparência da 
+janela, como definir o título, tamanho, cor de fundo e ícone.
+
+O método `create_elements()` é responsável por criar todos os elementos visuais da tela de login, como retângulos, 
+imagens, botões e entradas de texto, posicionando-os corretamente na janela.
+
+Os métodos `submter()`, `ir_para_cadastro()` e `ir_para_inicial()` são responsáveis por lidar com eventos, 
+como o clique nos botões de login e cadastro, e realizar ações apropriadas, como verificar as credenciais do usuário e 
+redirecioná-lo para outras telas.
+'''
 
 class TelaLogin(Tk):
+    '''
+    Chama os métodos layout_config() e appearence() para configurar a aparência da janela e instanciar a classe 
+    Repository para acesso ao banco de dados.
+    '''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.layout_config()
         self.appearence()
-
+        self.repository = Repository(DB_NAME, USER, PASSWORD)
+    '''
+    Este método configura o layout da janela de login. Ele define o título da janela como "OCRCreditBank", 
+    o tamanho da janela como 778x503 pixels e a cor de fundo como branco (#FFFFFF). Além disso, ele impede que 
+    o usuário redimensione a janela.
+    '''
     def layout_config(self):
         self.title('OCRCreditBank')
         self.geometry("778x503")
         self.configure(bg="#FFFFFF")
         self.resizable(False, False)
-
+    '''
+    Responsável por configurar a aparência da janela. Ele cria um Canvas para conter os elementos visuais da tela 
+    de login e configura o ícone da aplicação se o arquivo do ícone existir. Em seguida, chama create_elements() 
+    para criar os elementos visuais.
+    '''
     def appearence(self):
         self.canvas = Canvas(
             self,
@@ -40,7 +77,10 @@ class TelaLogin(Tk):
             self.iconbitmap(icon_path)
 
         self.create_elements()
-
+    '''
+    Este método cria todos os elementos visuais da tela de login, como retângulos, imagens, botões e entradas de texto. 
+    Ele utiliza o Canvas para desenhar os elementos e posicioná-los corretamente na janela.
+    '''
     def create_elements(self):
         self.canvas.place(x=0, y=0)
         self.canvas.create_rectangle(
@@ -135,26 +175,22 @@ class TelaLogin(Tk):
         self.images["image_4"] = PhotoImage(file=self.relative_to_assets("image_4.png"))
         image_4 = self.canvas.create_image(712.0, 50.0, image=self.images["image_4"])
 
-        # Repita o mesmo para as outras imagens
-
         entry_image_1 = PhotoImage(file=self.relative_to_assets("entry_1.png"))
         entry_bg_1 = self.canvas.create_image(529.5, 207.0, image=entry_image_1)
-        entry_1 = Entry(bd=0, bg="#FFFFFF", fg="#000716", highlightthickness=0)
-        entry_1.place(x=342.0, y=188.0, width=375.0, height=36.0)
+        self.entry_1 = Entry(bd=0, bg="#FFFFFF", fg="#000716", highlightthickness=0)
+        self.entry_1.place(x=342.0, y=188.0, width=375.0, height=36.0)
 
         entry_image_2 = PhotoImage(file=self.relative_to_assets("entry_2.png"))
         entry_bg_2 = self.canvas.create_image(527.5, 291.0, image=entry_image_2)
-        entry_2 = Entry(bd=0, bg="#FFFFFF", fg="#000716", highlightthickness=0)
-        entry_2.place(x=340.0, y=272.0, width=375.0, height=36.0)
-
-        # Adicione as outras entradas e botões aqui
+        self.entry_2 = Entry(bd=0, bg="#FFFFFF", fg="#000716", highlightthickness=0, show='*')
+        self.entry_2.place(x=340.0, y=272.0, width=375.0, height=36.0)
 
         button_1 = Button(
             self,  # Adicionando à janela principal, não ao canvas
             image=self.images["button_1"],
             borderwidth=0,
             highlightthickness=0,
-            command=self.ir_para_inicial,
+            command=self.submter,
             relief="flat",
             bg=self.cget('bg')
         )
@@ -165,7 +201,7 @@ class TelaLogin(Tk):
             image=self.images["button_2"],
             borderwidth=0,
             highlightthickness=0,
-            command=self.ir_para_cadastro,
+            command=print('click'),
             relief="flat",
             bg=self.cget('bg')
         )
@@ -188,26 +224,29 @@ class TelaLogin(Tk):
             fill="#000000",
             font=("Poppins Bold", 16 * -1),
         )
-
-    def ir_para_cadastro(self):
-        # Destrua a tela de login
+    '''
+    Chamado quando o botão de submissão é clicado. Ele obtém o nome de usuário e a senha inseridos pelo usuário e 
+    tenta fazer login chamando o método login() da instância de Repository. 
+    Se o login for bem-sucedido, redireciona o usuário para a tela inicial; caso contrário, exibe uma mensagem de erro.
+    '''
+    def submter(self):
+        username = self.entry_1.get()
+        password = self.entry_2.get()
+        if self.repository.login(username, password):
+            self.ir_para_inicial(username)
+        else:
+            messagebox.showerror("Erro", "Usuário ou senha incorretos. Por favor, tente novamente.")
+    '''
+    Chamado quando o login é bem-sucedido. Ele destrói a tela de login atual e cria uma nova instância da tela inicial 
+    da aplicação.
+    '''
+    def ir_para_inicial(self, username):
         self.destroy()
-        # Crie uma nova instância da tela de cadastro e execute
-        ##tela_cadastro = classe_tela_cadastro.TelaCadastro()
-        #tela_cadastro.run()
-
-    def ir_para_inicial(self):
-        # Destrua a tela de login
-        self.destroy()
-        # Crie uma nova instância da tela inicial e execute
         from interfaces.CLASSES_TELAS.classe_tela_inicial import TelaInicial
-        chamar_tela_inicial = TelaInicial()
+        chamar_tela_inicial = TelaInicial(username)
         chamar_tela_inicial.run()
-
+    '''
+    Inicia o loop principal da interface gráfica, permitindo que a aplicação seja executada e interaja com o usuário.
+    '''
     def run(self):
         self.mainloop()
-
-
-if __name__ == "__main__":
-    app = TelaLogin()
-    app.run()

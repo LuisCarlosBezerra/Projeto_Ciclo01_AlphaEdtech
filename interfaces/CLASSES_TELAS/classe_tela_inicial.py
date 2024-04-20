@@ -4,10 +4,10 @@ import os
 from db.repository import Repository
 from user_DB import DB_NAME, USER, PASSWORD
 class TelaInicial(Tk):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, username, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.layout_config()
-        self.appearence()
+        self.appearence(username)
         self.repository = Repository(DB_NAME, USER, PASSWORD)
         
     def layout_config(self):
@@ -16,7 +16,7 @@ class TelaInicial(Tk):
         self.configure(bg="#FFFFFF")
         self.resizable(False, False)
 
-    def appearence(self):
+    def appearence(self, username):
         self.canvas = Canvas(
             self,
             bg="#FFFFFF",
@@ -126,7 +126,7 @@ class TelaInicial(Tk):
             300.0,
             172.0,
             anchor="nw",
-            text="Seja bem vindo(a), Fulano!\n\nAdicione uma imagem ao lado \npara extrair os dados dela.",
+            text=f"Seja bem vindo(a), {username}!\n\nAdicione uma imagem ao lado \npara extrair os dados dela.",
             fill="#000000",
             font=("Poppins Regular", 20 * -1),
         )
@@ -151,27 +151,21 @@ class TelaInicial(Tk):
                 )
 
     def ir_tela_edicao_arquivo(self, file_path):
-        # Destrói a tela inicial
         self.destroy()
-        # Cria uma nova instância da tela de edição de arquivo e execute
         from interfaces.CLASSES_TELAS.classe_tela_edicao_arquivo import TelaEdicaoArquivo
         tela_edicao_arquivo = TelaEdicaoArquivo(file_path)
         tela_edicao_arquivo.run()
 
     def ir_tela_pesquisar(self):
-        # Destrói a tela inicial
         self.destroy()
-        # Cria uma nova instância da tela de pesquisa e execute
         from interfaces.CLASSES_TELAS.classe_tela_pesquisa import TelaPesquisa
         tela_pesquisa = TelaPesquisa()
         tela_pesquisa.run()
 
     def ir_tela_meus_arquivos(self):
-        # Destrua a tela inicial
         self.destroy()
-        # Crie uma nova instância da tela de meus arquivos e execute
         from interfaces.CLASSES_TELAS.classe_tela_meus_arquivos import TelaMeusArquivos
-        tela_meus_arquivos = TelaMeusArquivos(self.repository)  # Forneça o objeto repository
+        tela_meus_arquivos = TelaMeusArquivos() 
         tela_meus_arquivos.run()
 
     def logout(self):
