@@ -53,4 +53,5 @@ dicionario = OCR.extrairTexto()
 
 for i in dicionario:
     print(f'{i}...................................{dicionario[i]}')
+    
 '''
