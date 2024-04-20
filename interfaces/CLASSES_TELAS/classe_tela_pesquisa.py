@@ -1,16 +1,18 @@
-from tkinter import Tk, Canvas, Entry, Button, PhotoImage, Frame, ttk
+from tkinter import Tk, Canvas, Entry, Button, PhotoImage, Frame, ttk, messagebox
 from pathlib import Path
 import os
+from db.repository import Repository
 
 
 class TelaPesquisa(Tk):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, repository: Repository, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.repository = repository
         self.layout_config()
         self.appearence()
 
     def layout_config(self):
-        self.title('OCRCreditBank')
+        self.title("OCRCreditBank")
         self.geometry("1030x520")
         self.configure(bg="#FFFFFF")
         self.resizable(False, False)
@@ -68,7 +70,7 @@ class TelaPesquisa(Tk):
             highlightthickness=0,
             command=self.ir_para_inicial,
             relief="flat",
-            bg=self.cget('bg')
+            bg=self.cget("bg"),
         )
         self.button_1.place(x=17.0, y=100.0, width=155.0, height=24.0)
 
@@ -80,7 +82,7 @@ class TelaPesquisa(Tk):
             highlightthickness=0,
             command=lambda: print("button_2 clicked"),
             relief="flat",
-            bg=self.cget('bg')
+            bg=self.cget("bg"),
         )
         self.button_2.place(x=17.0, y=138.0, width=124.0, height=24.0)
 
@@ -92,7 +94,7 @@ class TelaPesquisa(Tk):
             highlightthickness=0,
             command=self.ir_tela_meus_arquivos,
             relief="flat",
-            bg=self.cget('bg')
+            bg=self.cget("bg"),
         )
         self.button_3.place(x=17.0, y=176.0, width=162.0, height=24.0)
 
@@ -108,10 +110,10 @@ class TelaPesquisa(Tk):
             image=self.button_image_4,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_4 clicked"),
+            command=self.submter,
             relief="flat",
-            bg='#D3D0CB',
-            activebackground='#D3D0CB'
+            bg="#D3D0CB",
+            activebackground="#D3D0CB",
         )
         self.button_4.place(x=895.0, y=431.0, width=93.0, height=29.0)
 
@@ -121,10 +123,10 @@ class TelaPesquisa(Tk):
             image=self.button_image_5,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_5 clicked"),
+            command=self.limpar,
             relief="flat",
-            bg='#D3D0CB',
-            activebackground='#D3D0CB'
+            bg="#D3D0CB",
+            activebackground="#D3D0CB",
         )
         self.button_5.place(x=772.0, y=431.0, width=93.0, height=29.0)
 
@@ -236,20 +238,36 @@ class TelaPesquisa(Tk):
             font=("Poppins Light", 13 * -1),
         )
 
-        self.treeview_frame=Frame(self, bd=1, relief="solid", bg="#D9D9D9")
+        self.treeview_frame = Frame(self, bd=1, relief="solid", bg="#D9D9D9")
         self.treeview_frame.place(x=205, y=85, width=537, height=435)
         # Adicionando o TreeView ao LabelFrame
-        self.treeview = ttk.Treeview(self.treeview_frame, columns=('Nº Cédula', 'Agente', 'Titular', 'Valor','Data','Local Físico'), show='headings')
-        self.treeview.heading('Nº Cédula', text='Número da Cédula')
-        self.treeview.heading('Agente', text='Agente')
-        self.treeview.heading('Titular', text='Titular')
-        self.treeview.heading('Valor', text='Valor')
-        self.treeview.heading('Data', text='Data do Contrato')
-        self.treeview.heading('Local Físico', text='Local Físico Armaz.')
-        self.treeview.pack(fill="both", expand=True)  # Preenche todo o espaço disponível
+        self.treeview = ttk.Treeview(
+            self.treeview_frame,
+            columns=(
+                "ID",
+                "Titular",
+                "Agente",
+                "Local Físico",
+                "Data",
+                "Valor",
+                "Nº Cédula",
+            ),
+            show="headings",
+        )
+        self.treeview.heading("ID", text="ID")
+        self.treeview.heading("Titular", text="Titular")
+        self.treeview.heading("Agente", text="Agente")
+        self.treeview.heading("Local Físico", text="Local Físico Armaz.")
+        self.treeview.heading("Data", text="Data do Contrato")
+        self.treeview.heading("Valor", text="Valor")
+        self.treeview.heading("Nº Cédula", text="Número da Cédula")
+        self.treeview.pack(
+            fill="both", expand=True
+        )  # Preenche todo o espaço disponível
 
         xscroll = ttk.Scrollbar(self.treeview, orient="horizontal")
         yscroll = ttk.Scrollbar(self.treeview, orient="vertical")
+        self.treeview.bind("<Double-1>", self.mostrar_imagem)
 
         # Adicionando as barras de rolagem
         xscroll.pack(side="bottom", fill="x")
@@ -269,7 +287,8 @@ class TelaPesquisa(Tk):
         self.destroy()
         # Crie uma nova instância da tela inicial e execute
         from interfaces.CLASSES_TELAS.classe_tela_inicial import TelaInicial
-        tela_inicial = TelaInicial()
+
+        tela_inicial = TelaInicial(self.repository)
         tela_inicial.run()
 
     def ir_tela_meus_arquivos(self):
@@ -277,5 +296,93 @@ class TelaPesquisa(Tk):
         self.destroy()
         # Crie uma nova instância da tela de meus arquivos e execute
         from interfaces.CLASSES_TELAS.classe_tela_meus_arquivos import TelaMeusArquivos
-        tela_meus_arquivos = TelaMeusArquivos()
+
+        tela_meus_arquivos = TelaMeusArquivos(self.repository)
         tela_meus_arquivos.run()
+
+    def limpar(self):
+        self.entry_1.delete(0, "end")
+        self.entry_2.delete(0, "end")
+        self.entry_3.delete(0, "end")
+        self.entry_4.delete(0, "end")
+        self.entry_5.delete(0, "end")
+        self.entry_6.delete(0, "end")
+        self.entry_7.delete(0, "end")
+
+    def submter(self):
+        entry_1 = self.entry_1.get()
+        entry_2 = self.entry_2.get()
+        entry_3 = self.entry_3.get()
+        entry_4 = self.entry_4.get()
+        entry_5 = self.entry_5.get()
+        entry_6 = self.entry_6.get()
+        entry_7 = self.entry_7.get()
+        items = self.treeview.get_children()
+        if len(items) != 0:
+            for item in items:
+                self.treeview.delete(item)
+        self.enviar_filtros(
+            entry_1, entry_2, entry_3, entry_4, entry_5, entry_6, entry_7
+        )
+
+    def enviar_filtros(
+        self, c_number, entry_2, entry_3, entry_4, entry_5, entry_6, entry_7
+    ):
+
+        print("Enviado filtros")
+
+        if c_number != "":
+            document = self.repository.get_document_by_certificate_number(c_number)
+            print("dentro do if com vazio")
+            if document:
+                self.treeview.insert(
+                    "",
+                    "end",
+                    values=(
+                        document.id,
+                        document.client.name,
+                        document.agent_name,
+                        document.physical_location,
+                        document.contract_date,
+                        document.credit_value,
+                        document.certificate_number,
+                    ),
+                )
+        else:
+            documents = self.repository.get_document_by_choice(
+                cl_name=entry_2,
+                ag_name=entry_3,
+                cr_value_init=entry_4,
+                cr_value_last=entry_6,
+                ct_date_init=entry_5,
+                ct_date_last=entry_7,
+            )
+            if documents:
+                for document in documents:
+                    self.treeview.insert(
+                        "",
+                        "end",
+                        values=(
+                            document.id,
+                            document.client.name,
+                            document.agent_name,
+                            document.physical_location,
+                            document.contract_date,
+                            document.credit_value,
+                            document.certificate_number,
+                        ),
+                    )
+
+    def mostrar_imagem(self, event):
+        item = self.treeview.selection()
+        if item:
+            # Obtém o nome do arquivo do item selecionado
+            filename = self.treeview.item(item, "values")[0]
+            if filename:
+                try:
+                    document = self.repository.get_document_id(int(filename))
+                    document.image.show_image()
+                except Exception as e:
+                    messagebox.showerror("Erro", f"Erro ao abrir a imagem: {e}")
+            else:
+                messagebox.showerror("Erro", "Nenhum documento selecionado.")

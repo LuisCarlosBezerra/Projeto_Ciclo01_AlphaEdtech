@@ -2,16 +2,56 @@ from tkinter import Tk, Canvas, Entry, Button, PhotoImage, Label
 from pathlib import Path
 from PIL import Image, ImageTk
 import os
+from db.repository import Repository
+
 
 class TelaEdicaoArquivo(Tk):
-    def __init__(self, file_path, *args, **kwargs):
+    """
+    A função submter irá pegar o que está escrito nos textboxs, que serão preenchidos pelo OCR, e salvar.
+    Para evitar documentos incompletos no banco de dados, será usada uma condição para verificar se um dos campos está
+    vazio. Se sim, aparece uma menssagem pedidndo para que o usuário preencha tudo corretamente. Essa é uam medida
+    de segurança para evitar erro no banco e para caso o usuário acione o botão de salvar antes dos campos serem
+    preenchidos ou, até mesmo, caso ele tenha editado os campos e no processo tenha deixado um em aberto.
+
+    Se a condição for respeitada, a função de enviar o que está escritos nos campos será chamada automaticamente e
+    o documento será salvo no banco de dados.
+    """
+
+    """
+    def submter(self):
+        entry_1 = self.entry_1.get()
+        entry_2 = self.entry_2.get()
+        entry_3 = self.entry_3.get()
+        entry_4 = self.entry_4.get()
+        entry_5 = self.entry_5.get()
+        entry_6 = self.entry_6.get()
+
+        # Verificar se algum campo está vazio
+        if not all([entry_1, entry_2, entry_3, entry_4, entry_5, entry_6]):
+            # Se algum campo estiver vazio, exibir uma mensagem de erro
+            messagebox.showerror("Erro", "Por favor, preencha todos os campos.")
+        else:
+            # Se todos os campos estiverem preenchidos, enviar os filtros
+            self.enviar_campos(entry_1, entry_2, entry_3, entry_4, entry_5, entry_6)
+
+    def enviar_campos(self, entry_1, entry_2, entry_3, entry_4, entry_5, entry_6):
+        print("Enviado ao banco")
+        
+        IMPLEMENTAR LÓGICA OU FUNÇÃO DO OCR QUE IRÁ ENVIAR PARA O BANCO. ELA DEVE RECEBER OS PARAMETROS DESSA FUNÇÃO
+        POIS ELA QUE ESTÁ OS TEXTOS E NÚMEROS PREENCHIDOS NOS CAMPOS ATRAVÉS DA INTERFACE.
+
+        SE FOR DISPENSÁVEL ESTA FUNÇÃO, PODE EXCLUÍ-LA, CONTANTO QUE OS CAMPOS SEJAM ENVIADOS
+        """
+
+    def __init__(self, file_path, repository: Repository, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.file_path = file_path
+        self.repository = repository
         self.layout_config()
         self.appearence()
 
     def layout_config(self):
-        self.title('OCRCreditBank')
+        self.title("OCRCreditBank")
         self.geometry("1030x520")
         self.configure(bg="#FFFFFF")
         self.resizable(False, False)
@@ -152,7 +192,7 @@ class TelaEdicaoArquivo(Tk):
             highlightthickness=0,
             command=self.ir_para_inicial,
             relief="flat",
-            bg=self.cget('bg')
+            bg=self.cget("bg"),
         )
         self.button_1.place(x=484.0, y=437.0, width=93.0, height=29.0)
 
@@ -163,7 +203,7 @@ class TelaEdicaoArquivo(Tk):
             highlightthickness=0,
             command=self.ir_para_inicial,
             relief="flat",
-            bg=self.cget('bg')
+            bg=self.cget("bg"),
         )
         self.button_2.place(x=604.0, y=437.0, width=93.0, height=29.0)
 
@@ -222,5 +262,6 @@ class TelaEdicaoArquivo(Tk):
         self.destroy()
         # Crie uma nova instância da tela inicial e execute
         from interfaces.CLASSES_TELAS.classe_tela_inicial import TelaInicial
-        tela_inicial = TelaInicial()
+
+        tela_inicial = TelaInicial(self.repository)
         tela_inicial.run()

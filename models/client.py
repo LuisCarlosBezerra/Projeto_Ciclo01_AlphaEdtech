@@ -76,7 +76,9 @@ class Client:
         try:
             self.id = db.cur.fetchone()[0]
         except Exception as error:
-            print(f'Dados não salvos no banco. Chaves únicas já existem no banco. Erro: {error}')
+            print(
+                f"Dados não salvos no banco. Chaves únicas já existem no banco. Erro: {error}"
+            )
 
     @staticmethod
     def from_database(db, client_id):
@@ -138,7 +140,7 @@ class Client:
                 ci.nome, ci.cpf, ci.agencia, ci.conta, ci.endereco, ci.data_nascimento
                 FROM cliente ci
         LEFT JOIN documento_digital d ON d.id_cliente = ci.id_cliente
-        LEFT JOIN imagens i ON d.id_imagem = i.id_imagem
+        LEFT JOIN imagem i ON d.id_imagem = i.id_imagem
         WHERE LOWER(ci.nome) LIKE LOWER(%s);
         """
 
