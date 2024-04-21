@@ -137,7 +137,7 @@ def encontrarPalavras(img):
                        }
     try:
         linhas_mrz = conteudoText(img)
-        print(linhas_mrz)
+        # print(linhas_mrz)
         for palavra, valor in palavrasEncontradas.items():
             for line in linhas_mrz:
                 if palavra in line:
