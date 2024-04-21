@@ -98,6 +98,16 @@ class Repository:
             list[DigitalDocument] or None: A list of DigitalDocument instances retrieved from the database
                 based on the provided criteria. Returns None if no matching documents are found.
         """
+        if (
+            cr_value_last == ""
+            and cr_value_init == ""
+            and ag_name == ""
+            and cl_name == ""
+            and ct_date_last == ""
+            and ct_date_init == ""
+        ):
+            return []
+
         if ct_date_init == "":
             ct_date_init = None
         if ct_date_last == "":
@@ -110,7 +120,6 @@ class Repository:
             cr_value_init = None
         if cr_value_last == "":
             cr_value_last = None
-
         return DigitalDocument.from_db_by_choice(
             self.db,
             ct_date_init=ct_date_init,
