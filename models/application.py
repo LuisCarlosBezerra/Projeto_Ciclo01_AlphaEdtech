@@ -52,7 +52,7 @@ class Application:
         Args:
             db (DatabaseConnection): The database connection object.
         """
-        self.user.save_to_database(db)
+        # self.user.save_to_database(db)
         self.digital_document.save_to_database(db)
         insert_query = """
         INSERT INTO aplicacao_manipula (tipo_manipulacao, data_hora, id_usuario, id_documento) 
