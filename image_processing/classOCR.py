@@ -28,6 +28,7 @@ class OCR:
     def __init__(self, img_path:str, padrao_path:str) -> None:
         self.img_path = img_path
         self.padrao_path = padrao_path
+        self.img = None
         
         
     
@@ -45,8 +46,8 @@ class OCR:
         return dictPalavras
         
 '''
-Exemplo de uso
-OCR = OCR('/home/souzaigor499/Desafio/Projeto_Ciclo01_AlphaEdtech/images/ImagensEscaneada/doc001.jpg','/home/souzaigor499/Desafio/Projeto_Ciclo01_AlphaEdtech/images/ImagensEscaneada/doc002.jpg')
+Exemplo de Uso
+OCR = OCR('/home/souzaigor499/Desafio/Projeto_Ciclo01_AlphaEdtech/images/ImagensEscaneada/doc006.jpg','/home/souzaigor499/Desafio/Projeto_Ciclo01_AlphaEdtech/images/ImagensEscaneada/doc002.jpg')
 
 OCR.alinhar_img()
 dicionario = OCR.extrairTexto()
@@ -54,4 +55,5 @@ dicionario = OCR.extrairTexto()
 for i in dicionario:
     print(f'{i}...................................{dicionario[i]}')
     
+
 '''
