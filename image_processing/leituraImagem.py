@@ -1,6 +1,6 @@
 
 
-
+import numpy as np
 import pytesseract
 import cv2
 
@@ -30,11 +30,15 @@ def conteudoText(img):
     try:
         # pega a largura e a altura da imagem
         (height, width) = img.shape
-        
+        # filtro de nitidez para melhoria da leitura
+        kernel = np.array([[0, -1,  0],
+                           [-1,  5, -1],
+                           [0, -1,  0]])
+        filter2d = cv2.filter2D(src=img, ddepth=-1, kernel=kernel)
         # define uma regiao de interesse na imagem a ser lida. Nesse caso, apenas 1/3 da imagem está sendo lido
         (x, y, w, h) = (0, 0, width, height // 3)
 
-        img_mrz = img[y:y+h, x:x+w]
+        img_mrz = filter2d[y:y+h, x:x+w]
         
         # utiliza a biblioteca pytesseract para a extração do texto
         mrz = pytesseract.image_to_string(img_mrz, lang='por', config=config_tesseract)
@@ -125,7 +129,7 @@ def encontrarPalavras(img):
                        'dereço:' : '',                    # ENDERECO DO CLIENTE
                        'Agência nº:' : '',                # AGENCIA
                        'Conta nº:' : '',                  # CONTA
-                       'Banco nº:' : '',                  # BANCO
+                       'anco nº:' : '',                   # BANCO
                        'BANCÁRIO Nº' : '',                # Nº DA CÉDULA
                        '$ ': '',                          # VALOR CRÉDITO 
                        'Nome do Agente:' : '',            # NOME DO AGENTE
@@ -133,6 +137,7 @@ def encontrarPalavras(img):
                        }
     try:
         linhas_mrz = conteudoText(img)
+        print(linhas_mrz)
         for palavra, valor in palavrasEncontradas.items():
             for line in linhas_mrz:
                 if palavra in line:
@@ -143,10 +148,10 @@ def encontrarPalavras(img):
                     
                     '''
                     
-                    if palavra == 'Banco nº:':
+                    if palavra == 'anco nº:':
                         valor = line.split(palavra, 1)[-1].strip()[:3]
                     elif palavra == 'Agência nº: ':
-                        valor = line.split(palavra, 1)[-1].strip().split(' Conta', 1)[0].strip()
+                        valor = line.split(palavra, 1)[-1].strip()[:4]
                     elif palavra == 'Endereço:':
                         valor = line.split(palavra, 1)[-1].strip().split(' - ', 1)[0].strip()
                     elif palavra == 'CPF: ':
