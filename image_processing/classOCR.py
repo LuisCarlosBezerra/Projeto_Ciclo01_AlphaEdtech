@@ -46,7 +46,7 @@ class OCR:
 
 
 # Exemplo de Uso
-OCR = OCR(r'C:\Users\luis_\OneDrive\Documentos\Projeto_Ciclo01_Alpha\images\ImagensEscaneada\doc002.jpg', r"C:\Users\luis_\OneDrive\Documentos\Projeto_Ciclo01_Alpha\images\ImagensEscaneada\doc002.jpg")
+OCR = OCR(r'images\ImagensEscaneada\doc001.jpg', r"images\ImagensEscaneada\doc002.jpg")
 
 OCR.alinhar_img()
 dicionario = OCR.extrairTexto()

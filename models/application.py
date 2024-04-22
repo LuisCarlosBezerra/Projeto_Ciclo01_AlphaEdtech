@@ -66,7 +66,10 @@ class Application:
             self.user.id,
             self.digital_document.id,
         )
-        self.id = db.cur.fetchone()[0]
+        try:
+            self.id = db.cur.fetchone()[0]
+        except Exception as error:
+            print(f'Erro: {error}')
 
     @staticmethod
     def from_database(db, application_id):
