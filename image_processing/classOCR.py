@@ -17,8 +17,8 @@ Returns:
     dict: Um dicionário contendo as palavras-chave encontradas na imagem alinhada e o texto que as segue, ou None se nenhuma palavra-chave for encontrada.
 """
 
-import image_align
-import leituraImagem
+from image_processing import image_align
+from image_processing import leituraImagem
 import numpy as np
 
 
@@ -42,14 +42,15 @@ class OCR:
     def extrairTexto(self) -> dict:
         imgLer = self.alinhar_img()
         dictPalavras = leituraImagem.encontrarPalavras(imgLer)
+
         return dictPalavras
 
 
-# Exemplo de Uso
-OCR = OCR(r'images\ImagensEscaneada\doc001.jpg', r"images\ImagensEscaneada\doc002.jpg")
+# # Exemplo de Uso
+# OCR = OCR("images/ImagensEscaneada/doc001.jpg", "images/ImagensEscaneada/doc002.jpg")
 
-OCR.alinhar_img()
-dicionario = OCR.extrairTexto()
-
-for i in dicionario:
-    print(f"{i}...................................{dicionario[i]}")
+# OCR.alinhar_img()
+# dicionario = OCR.extrairTexto()
+# print(dicionario)
+# for i in dicionario:
+#     print(f"{i}...................................{dicionario[i]}")

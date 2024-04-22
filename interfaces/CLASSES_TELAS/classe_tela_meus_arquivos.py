@@ -231,13 +231,13 @@ class TelaMeusArquivos(Tk):
         # self.treeview.heading("Valor", text="Valor")
         # self.treeview.heading("Nº Cédula", text="Número da Cédula")
 
-        #Definindo as âncoras das colunas como centralizadas e ajustando a largura automaticamente
+        # Definindo as âncoras das colunas como centralizadas e ajustando a largura automaticamente
         for coluna in self.treeview["columns"]:
             self.treeview.heading(coluna, text=coluna, anchor="center")
             self.treeview.column(
                 coluna, anchor="center", width=100, stretch=True
             )  # Largura inicial 100, mas que se adapta aos valores fornecidos
-            
+
         self.treeview.pack(
             fill="both", expand=True
         )  # Preenche todo o espaço disponível
@@ -266,7 +266,6 @@ class TelaMeusArquivos(Tk):
         if documents is None:
             pass
         else:
-            print("dentro do cliente")
             self.limpar_treeview()
             """
         Se o banco de dados não estiver vazio, a treeview irá percorrer os documentos no repistório presentes na 
@@ -297,7 +296,6 @@ class TelaMeusArquivos(Tk):
         if documents is None:
             pass
         else:
-            print("dentro do agente")
             self.limpar_treeview()
             """
         Se o banco de dados não estiver vazio, a treeview irá percorrer os documentos no repistório presentes na 
@@ -328,7 +326,6 @@ class TelaMeusArquivos(Tk):
         if documents is None:
             pass
         else:
-            print("dentro do agente")
             self.limpar_treeview()
             """
         Se o banco de dados não estiver vazio, a treeview irá percorrer os documentos no repistório presentes na 
@@ -359,7 +356,6 @@ class TelaMeusArquivos(Tk):
         if documents is None:
             pass
         else:
-            print("dentro do agente")
             self.limpar_treeview()
             """
         Se o banco de dados não estiver vazio, a treeview irá percorrer os documentos no repistório presentes na 
@@ -390,7 +386,6 @@ class TelaMeusArquivos(Tk):
         if documents is None:
             pass
         else:
-            print("dentro do valor")
             self.limpar_treeview()
             """
         Se o banco de dados não estiver vazio, a treeview irá percorrer os documentos no repistório presentes na 

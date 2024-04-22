@@ -45,7 +45,6 @@ class Repository:
                 "Salvando Novo Documento", datetime.now(), self.user, document
             )
             app.save_to_database(self.db)
-            print("INFO: Novo documento Salvo com sucesso!")
 
     def get_application(self, app_id):
         """

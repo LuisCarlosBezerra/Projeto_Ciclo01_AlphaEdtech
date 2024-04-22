@@ -1,9 +1,6 @@
-
-
 import numpy as np
 import pytesseract
 import cv2
-
 
 
 config_tesseract = '--tessdata-dir tessdata'
@@ -66,9 +63,6 @@ def conteudoText(img):
         return None
 
 
-
-
-
 def encontrarPalavras(img):
     '''
     Esta função procura por palavras-chave específicas em um texto extraído de uma imagem e retorna um dicionário
@@ -86,7 +80,7 @@ def encontrarPalavras(img):
     As palavras-chave e seus respectivos textos encontrados são retornados como um dicionário.
 
     '''
-    
+
     # dicionario para a conversão do mês encontrado por extenso em número
     meses_numeros = {
         'Janeiro': '01',
@@ -102,7 +96,7 @@ def encontrarPalavras(img):
         'Novembro': '11',
         'Dezembro': '12'
 }
-    
+
     # lista de chaves para serem utilizadas no dicionário a ser retornado ao fim da função
     chaves = [
                 'NOME_CLIENTE',
@@ -118,9 +112,9 @@ def encontrarPalavras(img):
                 'NOME_AGENTE' ,
                 'CPF_AGENTE'
                 ]
-    
+
     # lista de palavras para encontrar o texto após
-    
+
     palavrasEncontradas = {
                        'Emitente: ' : '',                 # NOME CLIENTE
                        'CPF: ' : '',                      # CPF CLIENTE
@@ -147,7 +141,7 @@ def encontrarPalavras(img):
                     É possível que nem todos os filtros funcionem para todas as palavras já que a palavra do filtro pode não ser encontrada pelo OCR
                     
                     '''
-                    
+
                     if palavra == 'anco nº:':
                         valor = line.split(palavra, 1)[-1].strip()[:3]
                     elif palavra == 'Agência nº: ':
@@ -161,18 +155,28 @@ def encontrarPalavras(img):
                     elif palavra == 'Nome do Agente:':
                         valor = line.split(palavra, 1)[-1].strip().split('CPF', 1)[0].strip()
                     elif palavra == 'principal do crédito ':
-                        valor = line.split(palavra, 1)[-1].strip()[3:-2]
+                        valor = (
+                            line.split(palavra, 1)[-1]
+                            .strip()[3:-2]
+                            
+                        )
                     else:
-                        valor = line.split(palavra, 1)[-1].strip()
-                    
+                        valor = (
+                            line.split(palavra, 1)[-1]
+                            .strip()
+                            .replace("-", "")
+                            .replace(":", "")
+                            .replace(" ", "")
+                        )
+
                     palavrasEncontradas[palavra] = valor
                     break
         if palavrasEncontradas:
             # inicializa uma lista vazia para armazenar os valores encontrados
             palavras = []
             for palavra in palavrasEncontradas:
-               palavras.append(palavrasEncontradas[palavra])
-            
+                palavras.append(palavrasEncontradas[palavra])
+
             # mapeia as palavras encontradas e as chaves para criar um novo dicionário
             dicionario = dict(zip(chaves, palavras))
 
@@ -182,19 +186,14 @@ def encontrarPalavras(img):
             dia = partes[0] if len(partes[0]) == 2 else '0' + partes[0]  # Obter o dia com zero à esquerda, se necessário
             mes = meses_numeros[partes[2]]  # Obter o número do mês usando o dicionário
             ano = partes[4]
-            
+
             # redefine o valor do dicionário naquela posição
             dicionario['DATA_CONTRATO'] = f'{dia}/{mes}/{ano}'
-            
-            
-            
-            
+
             return dicionario
         else:
             raise Exception
-    
+
     except Exception as e:
         print(f"Ocorreu um erro ao encontrar palavras: {e}")
         return None
-
-

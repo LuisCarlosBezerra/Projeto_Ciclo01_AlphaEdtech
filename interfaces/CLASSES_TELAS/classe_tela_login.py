@@ -185,13 +185,13 @@ class TelaLogin(Tk):
 
         entry_image_1 = PhotoImage(file=self.relative_to_assets("entry_1.png"))
         entry_bg_1 = self.canvas.create_image(529.5, 207.0, image=entry_image_1)
-        self.entry_1 = Entry(bd=0, bg="#FFFFFF", fg="#000716", highlightthickness=0)
+        self.entry_1 = Entry(bd=1, bg="#FFFFFF", fg="#000716", highlightthickness=0)
         self.entry_1.place(x=342.0, y=188.0, width=375.0, height=36.0)
 
         entry_image_2 = PhotoImage(file=self.relative_to_assets("entry_2.png"))
         entry_bg_2 = self.canvas.create_image(527.5, 291.0, image=entry_image_2)
         self.entry_2 = Entry(
-            bd=0, bg="#FFFFFF", fg="#000716", highlightthickness=0, show="*"
+            bd=1, bg="#FFFFFF", fg="#000716", highlightthickness=0, show="*"
         )
         self.entry_2.place(x=340.0, y=272.0, width=375.0, height=36.0)
 
@@ -206,25 +206,25 @@ class TelaLogin(Tk):
         )
         button_1.place(x=593.0, y=389.0, width=110.0, height=35.0)
 
-        button_2 = Button(
-            self,
-            image=self.images["button_2"],
-            borderwidth=0,
-            highlightthickness=0,
-            command=print("click"),
-            relief="flat",
-            bg=self.cget("bg"),
-        )
-        button_2.place(x=501.0, y=319.0, width=105.0, height=24.0)
+        # button_2 = Button(
+        #     self,
+        #     image=self.images["button_2"],
+        #     borderwidth=0,
+        #     highlightthickness=0,
+        #     command=print("click"),
+        #     relief="flat",
+        #     bg=self.cget("bg"),
+        # )
+        # button_2.place(x=501.0, y=319.0, width=105.0, height=24.0)
 
-        text1 = self.canvas.create_text(
-            327.0,
-            319.0,
-            anchor="nw",
-            text="Não tem uma conta?",
-            fill="#000000",
-            font=("Poppins Regular", 16 * -1),
-        )
+        # text1 = self.canvas.create_text(
+        #     327.0,
+        #     319.0,
+        #     anchor="nw",
+        #     text="Não tem uma conta?",
+        #     fill="#000000",
+        #     font=("Poppins Regular", 16 * -1),
+        # )
 
         text2 = self.canvas.create_text(
             327.0,

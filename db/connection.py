@@ -71,9 +71,13 @@ class DatabaseConnection:
         Raises:
             Exception: If an error occurs while fetching the data.
         """
-
-        self.cur.execute(query, args)
-        return self.cur.fetchall()
+        try:
+            self.cur.execute(query, args)
+            return self.cur.fetchall()
+        except Exception as e:
+            self.conn.rollback()
+            print(f"Erro: {e}")
+            return []
 
     def close_connection(self):
         """
