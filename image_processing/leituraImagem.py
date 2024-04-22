@@ -127,7 +127,7 @@ def encontrarPalavras(img):
                        'Dt de Nasc:' : '',                # DATA DE NASCIMENTO CLIENTE
                        'Local: ' : '',                    # DATA CONTRATO
                        'dereço:' : '',                    # ENDERECO DO CLIENTE
-                       'Agência nº:' : '',                # AGENCIA
+                       'Agência nº: ' : '',                # AGENCIA
                        'Conta nº:' : '',                  # CONTA
                        'anco nº:' : '',                   # BANCO
                        'BANCÁRIO Nº' : '',                # Nº DA CÉDULA
@@ -137,7 +137,7 @@ def encontrarPalavras(img):
                        }
     try:
         linhas_mrz = conteudoText(img)
-        # print(linhas_mrz)
+        print(linhas_mrz)
         for palavra, valor in palavrasEncontradas.items():
             for line in linhas_mrz:
                 if palavra in line:
