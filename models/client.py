@@ -81,7 +81,7 @@ class Client:
             )
 
     @staticmethod
-    def from_database(db, client_id):
+    def from_database(db, client_cpf):
         """
         Retrieves a Client instance from the database based on the provided client ID.
 
@@ -94,9 +94,9 @@ class Client:
         """
         select_query = """
         SELECT id_cliente, nome, cpf, agencia, conta, endereco, data_nascimento FROM cliente
-        WHERE cliente.id_cliente = %s;
+        WHERE cliente.cpf = %s;
         """
-        data = db.fetch_data(select_query, client_id)
+        data = db.fetch_data(select_query, client_cpf)
         if data:
             (
                 id,
@@ -116,9 +116,9 @@ class Client:
                 account=account,
                 address=address,
                 birth_date=birth_date,
-            )
+            ), True
         else:
-            return None
+            return None, False
 
     @staticmethod
     def documents_from_db_by_name(db, cl_name, class_document):

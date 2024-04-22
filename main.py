@@ -86,9 +86,9 @@ if __name__ == "__main__":
         # documentos = repository.get_documents_by_order()
         # for i in documentos:
         #     print(i)
-        ruben = User("ruben", "12345983-99", "rubinf", "12345")
+        ruben = User("ruben", "12345983-99", "rubenf", "12345")
         # repository.register(ruben)
-        print(repository.login("rubinf", "12345"))
+        print(repository.login("rubenf", "12345"))
         print(repository.user)
     finally:
         pass

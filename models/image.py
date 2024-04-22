@@ -94,6 +94,12 @@ class ImageClass:
         else:
             return None
 
+    def delete(self, db, image_id):
+        delete_query = """
+        DELETE FROM imagem WHERE id_imagem = %s RETURNING id_imagem;
+        """
+        data = db.execute_query(delete_query, image_id)
+
     def show_image(self):
         """
         Displays the image using Matplotlib.

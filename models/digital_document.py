@@ -62,26 +62,33 @@ class DigitalDocument:
         Args:
             db (DatabaseConnection): The database connection object.
         """
-        self.image.save_to_database(db)
-        self.client.save_to_database(db)
-        insert_query = """
-        INSERT INTO documento_digital (nome_agente, localizacao_fisica, data_contrato, valor_credito, numero_cedula, id_imagem, id_cliente) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id_documento;
-        """
-        db.execute_query(
-            insert_query,
-            "Salvando Documento",
-            self.agent_name,
-            self.physical_location,
-            self.contract_date,
-            self.credit_value,
-            self.certificate_number,
-            self.image.id,
-            self.client.id,
-        )
         try:
+            self.image.save_to_database(db)
+            client_search, verificacao = Client.from_database(db, self.client.cpf)
+            if verificacao:
+                id_client = client_search.id
+            else:
+                self.client.save_to_database(db)
+                id_client = self.client.id
+            insert_query = """
+            INSERT INTO documento_digital (nome_agente, localizacao_fisica, data_contrato, valor_credito, numero_cedula, id_imagem, id_cliente) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id_documento;
+            """
+            db.execute_query(
+                insert_query,
+                "Salvando Documento",
+                self.agent_name,
+                self.physical_location,
+                self.contract_date,
+                self.credit_value,
+                self.certificate_number,
+                self.image.id,
+                id_client,
+            )
+
             self.id = db.cur.fetchone()[0]
         except Exception as error:
+            self.image.delete(db, self.image.id)
             print(
                 f"Dados não salvos no banco. Chaves únicas já existem no banco. Erro: {error}"
             )
@@ -350,32 +357,58 @@ class DigitalDocument:
             else:
                 select_query += " AND d.data_contrato BETWEEN %s AND %s"
         select_query += ";"
+        try:
+            data = db.fetch_data(select_query, *values)
 
-        data = db.fetch_data(select_query, *values)
-        documents = []
-        if data:
-            for d in data:
+            documents = []
+            if data:
+                for d in data:
 
-                (
-                    id_document,
-                    agent_name,
-                    physical_location,
-                    contract_date,
-                    credit_value,
-                    c_number,
-                    id_image,
-                    image_name,
-                    image,
-                    id_client,
-                    client_name,
-                    cpf,
-                    agency,
-                    account,
-                    address,
-                    birth_date,
-                ) = d
-                if cl_name:
-                    if cl_name.lower() in client_name.lower():
+                    (
+                        id_document,
+                        agent_name,
+                        physical_location,
+                        contract_date,
+                        credit_value,
+                        c_number,
+                        id_image,
+                        image_name,
+                        image,
+                        id_client,
+                        client_name,
+                        cpf,
+                        agency,
+                        account,
+                        address,
+                        birth_date,
+                    ) = d
+                    if cl_name:
+                        if cl_name.lower() in client_name.lower():
+                            documents.append(
+                                DigitalDocument(
+                                    id=id_document,
+                                    agent_name=agent_name,
+                                    physical_location=physical_location,
+                                    contract_date=contract_date,
+                                    credit_value=credit_value,
+                                    certificate_number=c_number,
+                                    image=ImageClass(
+                                        id=id_image,
+                                        image_data=image,
+                                        image_name=image_name,
+                                    ),
+                                    client=Client(
+                                        id=id_client,
+                                        name=client_name,
+                                        cpf=cpf,
+                                        agency=agency,
+                                        account=account,
+                                        address=address,
+                                        birth_date=birth_date,
+                                    ),
+                                )
+                            )
+                    else:
                         documents.append(
                             DigitalDocument(
                                 id=id_document,
@@ -398,33 +431,12 @@ class DigitalDocument:
                                 ),
                             )
                         )
-                else:
-                    documents.append(
-                        DigitalDocument(
-                            id=id_document,
-                            agent_name=agent_name,
-                            physical_location=physical_location,
-                            contract_date=contract_date,
-                            credit_value=credit_value,
-                            certificate_number=c_number,
-                            image=ImageClass(
-                                id=id_image, image_data=image, image_name=image_name
-                            ),
-                            client=Client(
-                                id=id_client,
-                                name=client_name,
-                                cpf=cpf,
-                                agency=agency,
-                                account=account,
-                                address=address,
-                                birth_date=birth_date,
-                            ),
-                        )
-                    )
 
-            return documents
-        else:
-            return None
+                return documents
+            else:
+                return None
+        except Exception as e:
+            print(f"Erro: {e}")
 
     def from_db_order_by(
         db,

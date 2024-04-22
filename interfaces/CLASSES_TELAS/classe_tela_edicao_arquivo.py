@@ -1,4 +1,4 @@
-from tkinter import Tk, Canvas, Entry, Button, PhotoImage, Label, END
+from tkinter import Tk, Canvas, Entry, Button, PhotoImage, Label, END, messagebox
 from pathlib import Path
 from PIL import Image, ImageTk
 import os
@@ -7,7 +7,7 @@ from models.client import Client
 from models.application import DigitalDocument
 from models.image import ImageClass
 
-# from image_processing.classOCR import OCR
+from image_processing.classOCR import OCR
 
 
 class TelaEdicaoArquivo(Tk):
@@ -52,36 +52,39 @@ class TelaEdicaoArquivo(Tk):
         super().__init__(*args, **kwargs)
         self.file_path = file_path
         self.repository = repository
-        # ocr = OCR(file_path)
-        # self.dict_values = ocr.extrairTexto()
-        self.dict_values = {
-            "Emitente: ": "Ruben",  # NOME CLIENTE
-            "CPF: ": "123456",  # CPF CLIENTE
-            "Dt de Nasc:": "17/07/1999",  # DATA DE NASCIMENTO CLIENTE
-            "Local: ": "gaveta22",  # DATA CONTRATO
-            "DATA_CONTRATO": "01/08/2024",
-            "dereço:": "Marco - rua cinco",  # ENDERECO DO CLIENTE
-            "Agência nº:": "4563",  # AGENCIA
-            "Conta nº:": "23456-4",  # CONTA
-            "anco nº:": "Fire",  # BANCO
-            "BANCÁRIO Nº": "9876432",  # Nº DA CÉDULA
-            "$ ": "4000",  # VALOR CRÉDITO
-            "Nome do Agente:": "Luis",  # NOME DO AGENTE
-            "CPF do Agente: ": "986763032-93",  # CPF DO AGENTE
-        }
-        self.agencia = self.dict_values["Agência nº:"]
-        self.conta = self.dict_values["Conta nº:"]
-        self.data_nasc = self.dict_values["Dt de Nasc:"]
-        self.endereco = self.dict_values["dereço:"]
-        self.cpf = self.dict_values["CPF: "]
+        ocr = OCR(file_path)
+        self.dict_values = ocr.extrairTexto()
+        # self.dict_values = {
+        #     "Emitente: ": "Ruben",  # NOME CLIENTE
+        #     "CPF: ": "123456",  # CPF CLIENTE
+        #     "Dt de Nasc:": "17/07/1999",  # DATA DE NASCIMENTO CLIENTE
+        #     "Local: ": "gaveta22",  # DATA CONTRATO
+        #     "DATA_CONTRATO": "01/08/2024",
+        #     "dereço:": "Marco - rua cinco",  # ENDERECO DO CLIENTE
+        #     "Agência nº:": "4563",  # AGENCIA
+        #     "Conta nº:": "23456-4",  # CONTA
+        #     "anco nº:": "Fire",  # BANCO
+        #     "BANCÁRIO Nº": "9876432",  # Nº DA CÉDULA
+        #     "$ ": "4000",  # VALOR CRÉDITO
+        #     "Nome do Agente:": "Luis",  # NOME DO AGENTE
+        #     "CPF do Agente: ": "986763032-93",  # CPF DO AGENTE
+        # }
+        self.agencia = self.dict_values["AGENCIA"]
+        self.conta = self.dict_values["CONTA"]
+        self.data_nasc = self.dict_values["DATA_CLIENTE:"]
+        self.endereco = self.dict_values["ENDERECO"]
+        self.cpf = self.dict_values["CPF_CLIENTE"]
         self.layout_config()
         self.appearence()
         self.set_text(
-            titular=self.dict_values["Emitente: "],
-            valor_credito=self.dict_values["$ "],
-            nome_agente=self.dict_values["Nome do Agente:"],
+            titular=self.dict_values["NOME_CLIENTE"],
+            valor_credito=self.dict_values["VALOR_CREDITO"]
+            .replace(",", ".")
+            .replace(".", "", 1),
+            # .replace(",", "."),
+            nome_agente=self.dict_values["NOME_AGENTE"],
             data_contrato=self.dict_values["DATA_CONTRATO"],
-            numero_cedula=self.dict_values["BANCÁRIO Nº"],
+            numero_cedula=self.dict_values["CEDULA"],
             # nome_agente=self.dict_values["Nome do Agente:"],
         )
         print(self.dict_values)
@@ -310,28 +313,34 @@ class TelaEdicaoArquivo(Tk):
         entry_5 = self.entry_5.get()
         entry_6 = self.entry_6.get()
 
-        self.repository.save_applicacation(
-            DigitalDocument(
-                agent_name=entry_3,
-                physical_location=entry_2,
-                contract_date=entry_6,
-                credit_value=entry_1,
-                certificate_number=entry_5,
-                image=ImageClass(
-                    image_name="imagem",
-                    image_path=self.file_path,
-                ),
-                client=Client(
-                    name=entry_4,
-                    cpf=self.cpf,
-                    agency=self.agencia,
-                    account=self.conta,
-                    address=self.endereco,
-                    birth_date=self.data_nasc,
-                ),
+        if entry_2 == "":
+            messagebox.showerror(
+                "Erro: Campo vazio",
+                "Campo LOCAL FÍSICO DE ARMAZENAMENTO vazio, por favor Preencha este campo!",
             )
-        )
-        self.ir_para_inicial()
+        else:
+            self.repository.save_applicacation(
+                DigitalDocument(
+                    agent_name=entry_3,
+                    physical_location=entry_2,
+                    contract_date=entry_6,
+                    credit_value=entry_1,
+                    certificate_number=entry_5,
+                    image=ImageClass(
+                        image_name="imagem",
+                        image_path=self.file_path,
+                    ),
+                    client=Client(
+                        name=entry_4,
+                        cpf=self.cpf,
+                        agency=self.agencia,
+                        account=self.conta,
+                        address=self.endereco,
+                        birth_date=self.data_nasc,
+                    ),
+                )
+            )
+            self.ir_para_inicial()
 
     def set_text(
         self, valor_credito, titular, nome_agente, data_contrato, numero_cedula

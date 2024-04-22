@@ -2,6 +2,7 @@ PC01_OCR/
 __pycache__/
 
 user_DB.py
+main.py
 .gitignore
 
 image_processing/testes.py
