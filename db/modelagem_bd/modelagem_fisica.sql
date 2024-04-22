@@ -60,3 +60,9 @@ ALTER TABLE Documento_Digital
 ADD CONSTRAINT fk_id_imagem
 FOREIGN KEY (id_imagem)
 REFERENCES Imagem(id_imagem);
+
+CREATE INDEX idx_nome_agente ON Documento_Digital USING btree (nome_agente);
+CREATE INDEX idx_data_contrato ON Documento_Digital USING btree (data_contrato);
+CREATE INDEX idx_valor_credito ON Documento_Digital USING btree (valor_credito);
+CREATE INDEX idx_numero_cedula ON Documento_Digital USING btree (numero_cedula);
+CREATE INDEX idx_nome_cliente ON Cliente USING btree (nome);
