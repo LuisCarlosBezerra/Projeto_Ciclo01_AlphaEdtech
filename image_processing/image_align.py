@@ -53,21 +53,21 @@ def image_align(imagem_path = 'images/imgPrint/doc1.png', padrao_path='/home/sou
 
     # save_path = './outputs_tests_images/output.png'
     # cv2.imwrite(save_path, transformed_img)
-    kernel = np.ones((2, 2), np.uint8)
+    kernel = np.ones((3, 3), np.uint8)
     # img = cv2.resize(transformed_img, None, fx=1.2, fy=1.2, interpolation=cv2.INTER_CUBIC)
     #img = cv2.dilate(transformed_img, kernel, iterations=3)
     #img = cv2.erode(transformed_img, kernel, iterations=1)
-    suave = cv2.blur(transformed_img, (2,2))
+    suave = cv2.blur(transformed_img, (1,1))
     # converte a imagem tranformada em escala de cinza para ser utilizada na função leituraImagem.encontrarPalavras()
     imagem_escala_cinza = cv2.cvtColor(suave, cv2.COLOR_BGR2GRAY)
-    ret, bin = cv2.threshold(imagem_escala_cinza,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
-    #bin = cv2.blur(bin, (2,2))
+    ret, bin = cv2.threshold(imagem_escala_cinza,160,255,cv2.THRESH_BINARY_INV)
+    bin = cv2.blur(bin, (2,2))
     bin = cv2.erode(bin, kernel, iterations=1)
     return bin
 
 
 if __name__ == "__main__":
-    padrao = r'C:\Users\luis_\OneDrive\Documentos\Projeto_Ciclo01_Alpha\images\ImagensEscaneada\doc002.jpg'
+    padrao = r'C:\Users\luis_\OneDrive\Documentos\Projeto_Ciclo01_Alpha\images\ImagensEscaneada\doc004.jpg'
     imagem = r'C:\Users\luis_\OneDrive\Documentos\Projeto_Ciclo01_Alpha\images\ImagensEscaneada\doc006.jpg'
     image = image_align(imagem, padrao)
     cv2.imshow('image', image)
