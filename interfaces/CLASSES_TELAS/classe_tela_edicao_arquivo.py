@@ -50,10 +50,8 @@ class TelaEdicaoArquivo(Tk):
 
     def __init__(self, file_path, repository: Repository, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.file_path = file_path
         self.repository = repository
         ocr = OCR(file_path)
-        self.dict_values = ocr.extrairTexto()
         # self.dict_values = {
         #     "Emitente: ": "Ruben",  # NOME CLIENTE
         #     "CPF: ": "123456",  # CPF CLIENTE
@@ -69,6 +67,8 @@ class TelaEdicaoArquivo(Tk):
         #     "Nome do Agente:": "Luis",  # NOME DO AGENTE
         #     "CPF do Agente: ": "986763032-93",  # CPF DO AGENTE
         # }
+        self.dict_values = ocr.extrairTexto()
+        self.file_path = "images/outputs_temp_images/output.png"
         self.agencia = self.dict_values["AGENCIA"]
         self.conta = self.dict_values["CONTA"]
         self.data_nasc = self.dict_values["DATA_CLIENTE:"]
@@ -81,13 +81,10 @@ class TelaEdicaoArquivo(Tk):
             valor_credito=self.dict_values["VALOR_CREDITO"]
             .replace(",", ".")
             .replace(".", "", 1),
-            # .replace(",", "."),
             nome_agente=self.dict_values["NOME_AGENTE"],
             data_contrato=self.dict_values["DATA_CONTRATO"],
             numero_cedula=self.dict_values["CEDULA"],
-            # nome_agente=self.dict_values["Nome do Agente:"],
         )
-        print(self.dict_values)
 
     def layout_config(self):
         self.title("OCRCreditBank")
