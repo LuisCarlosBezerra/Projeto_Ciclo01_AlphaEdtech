@@ -69,22 +69,28 @@ class TelaEdicaoArquivo(Tk):
         # }
         self.dict_values = ocr.extrairTexto()
         self.file_path = "images/outputs_temp_images/output.png"
-        self.agencia = self.dict_values["AGENCIA"]
-        self.conta = self.dict_values["CONTA"]
-        self.data_nasc = self.dict_values["DATA_CLIENTE:"]
-        self.endereco = self.dict_values["ENDERECO"]
-        self.cpf = self.dict_values["CPF_CLIENTE"]
-        self.layout_config()
-        self.appearence()
-        self.set_text(
-            titular=self.dict_values["NOME_CLIENTE"],
-            valor_credito=self.dict_values["VALOR_CREDITO"]
-            .replace(",", ".")
-            .replace(".", "", 1),
-            nome_agente=self.dict_values["NOME_AGENTE"],
-            data_contrato=self.dict_values["DATA_CONTRATO"],
-            numero_cedula=self.dict_values["CEDULA"],
-        )
+        if self.dict_values:
+            self.agencia = self.dict_values["AGENCIA"]
+            self.conta = self.dict_values["CONTA"]
+            self.data_nasc = self.dict_values["DATA_CLIENTE:"]
+            self.endereco = self.dict_values["ENDERECO"]
+            self.cpf = self.dict_values["CPF_CLIENTE"]
+            self.layout_config()
+            self.appearence()
+            self.set_text(
+                titular=self.dict_values["NOME_CLIENTE"],
+                valor_credito=self.dict_values["VALOR_CREDITO"]
+                .replace(",", ".")
+                .replace(".", "", 1),
+                nome_agente=self.dict_values["NOME_AGENTE"],
+                data_contrato=self.dict_values["DATA_CONTRATO"],
+                numero_cedula=self.dict_values["CEDULA"],
+            )
+        else:
+            self.layout_config()
+            self.appearence()
+            messagebox.showerror('Erro','Image selecionada está fora do padrão válido!')
+            self.ir_para_inicial()
 
     def layout_config(self):
         self.title("OCRCreditBank")
