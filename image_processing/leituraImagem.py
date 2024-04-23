@@ -131,7 +131,6 @@ def encontrarPalavras(img):
                        }
     try:
         linhas_mrz = conteudoText(img)
-        print(linhas_mrz)
         for palavra, valor in palavrasEncontradas.items():
             for line in linhas_mrz:
                 if palavra in line:
@@ -144,6 +143,8 @@ def encontrarPalavras(img):
 
                     if palavra == 'anco nº:':
                         valor = line.split(palavra, 1)[-1].strip()[:3]
+                    elif palavra == 'Emitente: ':
+                        valor = line.split(palavra, 1)[-1].strip()
                     elif palavra == 'Agência nº: ':
                         valor = line.split(palavra, 1)[-1].strip()[:4]
                     elif palavra == 'Endereço:':
