@@ -24,8 +24,8 @@ try:
     # db = repository.db
     """
     É necessário ter usuários cadastrados no sistema:
-        cavalo_paraguaio = User("CP", "829088040-50", "CP", "12345")
-        #repository.register(cavalo_paraguaio)
+        carlos_pereira = User("CP", "829088040-50", "CP", "12345")
+        #repository.register(carlos_pereira)
         print(repository.login("CP", "12345"))
         print(repository.user)
 
